@@ -440,6 +440,7 @@ Workaround is to delete all users with registered zip codes and recreate them.
 
 The app is functional, but here are the things that should be done / fixed (in no particular order :
 
+- Zip code parsing : fix issue when first number found is a street number with 4 digits
 - Add a flag to publication modal to signal if there are corresponding OCR and PNG files associated ;
 - i18n : French, Dutch and English (currently mix of English and French) ;
 - The GUI needs tests ;
