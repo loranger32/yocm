@@ -1,0 +1,33 @@
+- @tab_title = "Users"
+- @page_title = 'Users'
+
+.text-center.mt-4
+  %button.btn.btn-primary{type: "button", "data-bs-toggle" => "collapse", "data-bs-target" => "#collapseNewUserForm",
+    "aria-expanded" => false, "aria-controls" => "collapseNewUserForm"}
+    %svg{xmlns: "http://www.w3.org/2000/svg", width: "20", height: "20", fill: "currentColor", class: "bi bi-plus-circle-fill", viewBox: "0 0 16 16"}
+      %path{d: "M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"}
+.row.mb-5
+  .col-10.offset-1.col-md-6.offset-md-3.col-xl-4.offset-xl-4.mb-3
+    %form.collapse#collapseNewUserForm.mt-3{action: "/users", method: :post}
+      != csrf_tag("/users")
+      %input.form-control.mb-3{id: 'email', name: 'email', type: :email, autofocus: true, size: "50",
+          maxlength: 255, placeholder: "Add new user email address here"}
+      .text-center
+        %input.btn.btn-primary{type: :submit, value: 'Register User'}
+
+.row
+  .col-8.offset-2
+    %table.table
+      %thead.text-center
+        %tr
+          %th{scope: "col"} Username
+          %th{scope: "col"} Zip Codes
+          %th{scope: "col"} Enterprises
+          %th{scope: "col"} Active
+      - @users.each do |user|
+        %tr.text-center
+          %td
+            %a{href: "users/#{user.id}"}= user.email
+          %td= user.zip_codes.size
+          %td= user.enterprises.size
+          %td= is_active?(user) ? "✔️" : "❌"

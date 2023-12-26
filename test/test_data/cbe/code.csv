@@ -1,0 +1,19 @@
+
+"Category","Code","Language","Description"
+"EntityContact","EST","FR","Unité d'établissement"
+"EntityContact","EST","NL","Vestigingseenheid"
+"JuridicalForm","017","DE","Vereinigung ohne Gewinnerzielungsabsicht"
+"JuridicalForm","017","FR","Association sans but lucratif"
+"JuridicalForm","017","NL","Vereniging zonder winstoogmerk"
+"JuridicalForm","411","DE","Stadt / Gemeinde"
+"JuridicalForm","411","FR","Ville / commune"
+"JuridicalForm","411","NL","Stad / gemeente"
+"JuridicalForm","610","DE","Gesellschaft mit beschränkter Haftung"
+"JuridicalForm","610","FR","Société à responsabilité limitée"
+"JuridicalForm","610","NL","Besloten Vennootschap"
+"JuridicalSituation","000","DE","gewöhnlicher Zustand"
+"JuridicalSituation","000","FR","Situation normale"
+"JuridicalSituation","000","NL","Normale toestand"
+"JuridicalSituation","001","DE","Rechtsgründung"
+
+

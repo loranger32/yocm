@@ -1,0 +1,5 @@
+%label.form-label.mb-3{for: 'file_name'} Search by File Name
+%input.form-control.mb-3{id: 'file_name', name: 'file_name', type: "search", placeholder: '12345678.pdf', maxlength: 12,
+  autofocus: true, "hx-get" => "/search/filter/file-name", "hx-trigger" => "keyup changed delay:500ms, search", "hx-target" => "#file_name_table"}
+
+#file_name_table

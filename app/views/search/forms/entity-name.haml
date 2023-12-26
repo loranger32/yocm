@@ -1,0 +1,5 @@
+%label.form-label.mb-3{for: 'entity_name'} Search by Entity Name
+%input.form-control.mb-3{id: 'entity_name', name: 'entity_name', type: "search", placeholder: 'company XYZ', maxlength: 50,
+  autofocus: true, "hx-get" => "/search/filter/entity-name", "hx-trigger" => "keyup changed delay:500ms, search", "hx-target" => "#entity_name_table"}
+
+#entity_name_table

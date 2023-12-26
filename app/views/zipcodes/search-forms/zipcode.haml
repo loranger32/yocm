@@ -1,0 +1,7 @@
+.row.mb-5
+  .col-10.offset-1.col-md-8.offset-md-2.col-xl-2.offset-xl-5
+    %label.form-label.mb-3{for: "zipcode"} Search by Zipcode
+    %input.form-control.mb-3{id: "zipcode", name: "zipcode", type: "search", placeholder: 'zipcode', maxlength: 4,
+      autofocus: true, "hx-get" => "/zipcodes/filter/zipcode", "hx-trigger" => "keyup changed delay:500ms, search", "hx-target" => "#zipcode_table"}
+
+#zipcode_table

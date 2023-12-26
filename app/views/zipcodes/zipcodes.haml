@@ -1,0 +1,13 @@
+- @page_title = "Zip Codes"
+- @tab_title = "Zip Codes"
+
+%h4.h5.text-center.mb-5 Select Search Type
+
+.col-10.offset-1.col-xl-6.offset-xl-3.col-xxl-4.offset-xxl-4.d-flex.justify-content-between.mb-5
+  %p.btn.btn-primary{"hx-get" => "/zipcodes/search-forms/zipcodes", "hx-target" => "#search-bar"} Zip Code
+  %p.btn.btn-primary{"hx-get" => "/zipcodes/search-forms/village", "hx-target" => "#search-bar"} Village
+  %p.btn.btn-primary{"hx-get" => "/zipcodes/search-forms/city", "hx-target" => "#search-bar"} City
+  %p.btn.btn-primary{"hx-get" => "/zipcodes/search-forms/provinces", "hx-target" => "#search-bar"} Province
+  %p.btn.btn-primary{"hx-get" => "/zipcodes/tables/all", "hx-target" => "#search-bar"} Show All
+
+.col-10.offset-1.col-xl-8.offset-xl-2#search-bar

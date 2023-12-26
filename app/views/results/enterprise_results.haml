@@ -1,0 +1,13 @@
+- @page_title = "Matching Enterprises"
+
+%h4.text-center.mb-3
+  %p
+    %a.btn.btn-secondary{href: "/publications/#{@pub_date}"}= date_clean(@pub_date)
+
+- if @enterprises.empty?
+  %h4.py-5.text-center
+    %span.p-3.bg-warning.rounded-3 No matching enterprises
+- else
+  %p.text-center.mb-5
+    %span.badge.bg-primary.fs-5.p-2 #{@enterprises.count} matches
+  != render_each(@enterprises, :enterprise)

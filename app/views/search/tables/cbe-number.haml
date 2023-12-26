@@ -1,0 +1,21 @@
+- if @max_results_size
+  %p.mb-2
+    #{@denominations.count} Results
+    %small.fst-italic (showing only the first 100 results - refine your search)
+- else
+  %p.mb-2 #{@denominations.count} Results
+
+%table.table
+  %thead
+    %tr
+      %td
+        %strong Entity Name
+      %td
+        %strong Entity Number
+
+  %tbody
+    - @denominations.each do |denom|
+      %tr
+        %td= denom.description
+        %td
+          %a{href: "/enterprises/#{denom.enterprise_id}"}= denom.enterprise_id

@@ -1,0 +1,50 @@
+- @tab_title = "Home"
+- @page_title = "Last results overview"
+
+- if @no_pub
+  %p.text-center No Publications yet
+- else
+  %article.mb-5
+    %p.h6.text-center.mb-3= date_clean(@last_pub_date)
+    .d-flex.justify-content-center
+      - if @active_user
+        %p.text-center.m-5
+          %a.btn.btn-primary{href: "/users/#{@active_user.id}/results"} Results
+      - if (fix_zip_link = link_to_first_zip_error_publication(@last_pub_date))
+        %p.text-center.m-5
+          %a.btn.btn-primary{href: fix_zip_link}
+            Fix Zip
+            %span.badge.bg-danger= @last_pub_zip_code_missing
+      -else
+        %p.text-center.btn.btn-success.disabled.m-5 All Zip OK
+
+    .row
+      %section.col-4.offset-4.col-xxl-2.offset-xxl-5.bg-dark.rounded-2.p-5.p-xxl-3
+        
+        .d-flex.justify-content-between
+          %p
+            %a.text-white{href: "/publications/#{@last_pub_date}"} Publications
+          %p.h5
+            %a{href: "/publications/#{@last_pub_date}"}
+              %span.badge.bg-danger= @last_pub_count
+        
+        .d-flex.justify-content-between
+          %p
+            %a.text-white{href: "/publications/#{@last_pub_date}/complete"} Complete
+          %p.h5
+            %a{href: "/publications/#{@last_pub_date}/complete"}
+              %span.badge.bg-danger= @last_pub_complete_count
+
+        .d-flex.justify-content-between
+          %p
+            %a.text-white{href: "/publications/#{@last_pub_date}/new"} New publications
+          %p.h5
+            %a{href: "/publications/#{@last_pub_date}/new"}
+              %span.badge.bg-danger= @last_pub_probably_new_count
+        
+        .d-flex.justify-content-between
+          %p
+            %a.text-white{href: "/publications/#{@last_pub_date}/zip-code-errors"} Zip Code Errors
+          %p.h5
+            %a{href: "/publications/#{@last_pub_date}/zip-code-errors"}
+              %span.badge.bg-danger= @last_pub_zip_code_missing

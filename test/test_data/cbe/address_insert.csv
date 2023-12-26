@@ -1,0 +1,5 @@
+"EntityNumber","TypeOfAddress","CountryNL","CountryFR","Zipcode","MunicipalityNL","MunicipalityFR","StreetNL","StreetFR","HouseNumber","Box","ExtraAddressInfo","DateStrikingOff"
+"0777.777.777","REGO",,,"7000","Bergen","Mons","Bergensestraat","Rue de Mons","7",,,
+"0888.888.888","REGO",,,"8000","Brugge","Bruges","Bruggestraat","Rue de Bruges","8",,,
+"0999.999.999","REGO",,,"AB-123","Nowhere City","Nowhere City","Empty Street","Empty Street","999",,,
+"9.111.999.999","ABBR",,,"9000","Gent","Gand","Gentsestraat","Rue de Gand","9",,,

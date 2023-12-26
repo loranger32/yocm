@@ -1,0 +1,7 @@
+.row.mb-5
+  .col-10.offset-1.col-md-8.offset-md-2.col-xl-2.offset-xl-5
+    %label.form-label.mb-3{for: "city_name"} Search by City Name
+    %input.form-control.mb-3{id: "city_name", name: "city_name", type: "search", placeholder: 'city name', maxlength: 50,
+      autofocus: true, "hx-get" => "/zipcodes/filter/city", "hx-trigger" => "keyup changed delay:500ms, search", "hx-target" => "#city_name_table"}
+
+#city_name_table

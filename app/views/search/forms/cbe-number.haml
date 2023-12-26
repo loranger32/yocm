@@ -1,0 +1,5 @@
+%label.form-label.mb-3{for: 'cbe_number'} Search by CBE Number
+%input.form-control.mb-3{id: 'cbe_number', name: 'cbe_number', type: "search", placeholder: '0123456789', maxlength: 12,
+  autofocus: true, "hx-get" => "/search/filter/cbe-number", "hx-trigger" => "keyup changed delay:500ms, search", "hx-target" => "#cbe_number_table"}
+
+#cbe_number_table

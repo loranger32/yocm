@@ -1,0 +1,29 @@
+- @page_title = "Results overview"
+- @tab_title = date_clean(@pub_date)
+
+%h4.text-center.mb-3
+  %p
+    %a.btn.btn-secondary{href: "/publications/#{@pub_date}"}= date_clean(@pub_date)
+
+%p.text-center.mb-5
+  %span.badge.bg-primary.fs-5.p-2 #{@total_matching_publications} matches
+
+.row.mb-5
+  .col-10.offset-1.col-xxl-8.offset-xxl-2.d-flex.flex-wrap.justify-content-center.mb-5
+    - @matching_codes_count.each do |match|
+      .px-3
+        - if match[0].code == @current_zip_code.code
+          %p.bg-secondary.p-2.text-white.rounded-3
+            = match[0].code
+            %span.badge.bg-danger= match[1]
+        - else
+          %a{href: "/users/#{@user.id}/results/#{@pub_date}/zipcodes/#{match[0].code}"}
+            %p.bg-info.p-2.text-white.rounded-3
+              = match[0].code
+              %span.badge.bg-danger= match[1]
+
+  .row
+    %h4.col-6.offset-3.text-center.bg-info.text-white.p-2.rounded-3.mb-5{id: @current_zip_code.code} #{@current_zip_code.code} - #{all_villages_from(@current_zip_code)}
+
+    != render_each(publications_matching_zip_code(@publications, @current_zip_code), "partials/_publication_result", local: :publication)
+

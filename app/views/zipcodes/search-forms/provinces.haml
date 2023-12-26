@@ -1,0 +1,9 @@
+.row.mb-5
+  .col-10.offset-1.col-md-8.offset-md-2.col-xl-2.offset-xl-5
+    %label.form-label.mb-3{for: 'province-select'} Select Province
+    %select.form-select{"aria-label" => "Select Province", id: "province-select", name: "province-select",
+      "hx-get" => "/zipcodes/filter/province", "hx-target" => "#province_zip_codes_table"}
+      - @provinces.each do |province|
+        %option{value: province}= province
+
+#province_zip_codes_table

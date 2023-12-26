@@ -1,0 +1,88 @@
+- @tab_title = @user.email
+
+%h4.text-center.mb-5#user_email= @user.email
+
+.d-flex.justify-content-center.mb-3
+  %a.d-block.btn.btn-primary.me-3{href: "/users/#{@user.id}/results"} Results
+  %button.d-block.btn.btn-warning.me-3{type: "button", "data-bs-toggle" => "collapse", "data-bs-target" => "#collapseAddZipForm",
+    "aria-expanded" => false, "aria-controls" => "collapseAddZipForm"} Add Zip
+
+  %button.d-block.btn.btn-warning.me-3{type: "button", "data-bs-toggle" => "collapse", "data-bs-target" => "#collapseAddCBEForm",
+    "aria-expanded" => false, "aria-controls" => "collapseAddCBEForm"} Add CBE
+  
+  - if @user == @active_user
+    %button.btn.btn-secondary.me-3{disabled: true} User is active
+  - else 
+    %form.me-3{action: "/users/#{@user.id}/activate", method: :post}
+      != csrf_tag("/users/#{@user.id}/activate")
+      %input.btn.btn-success{type: :submit, value: 'Make active'}
+
+  %form{action: "/users/#{@user.id}", method: :post}
+    != csrf_tag("/users/#{@user.id}")
+    %input.btn.btn-danger#delete_user_button{type: :submit, value: 'Delete'}
+
+.row
+  .col-10.offset-1.col-md-6.offset-md-3.col-xl-4.offset-xl-4.mb-3
+    %form.collapse#collapseAddZipForm{action: "/users/#{@user.id}/add_zip", method: :post}
+      != csrf_tag("/users/#{@user.id}/add_zip")
+      %input.form-control.mb-3{id: 'new_zip', name: 'new_zip', autofocus: true, maxlength: 4, placeholder: "Add zip code" }
+      .text-center
+        %input.btn.btn-primary{type: :submit, value: 'Register Zip'}
+
+.row
+  .col-10.offset-1.col-md-6.offset-md-3.col-xl-4.offset-xl-4.mb-3
+    %form.collapse#collapseAddCBEForm{action: "/users/#{@user.id}/add_enterprise", method: :post}
+      != csrf_tag("/users/#{@user.id}/add_enterprise")
+      %input.form-control.mb-3{id: 'cbe_number', name: 'cbe_number', autofocus: true, maxlength: 12, placeholder: "Add CBE number" }
+      .text-center
+        %input.btn.btn-primary{type: :submit, value: 'Register CBE'}
+
+.row
+  .col-4.offset-1
+    %h5.text-center.mb-4 Zipcodes
+    - if @user.zip_codes.empty?
+      %p.text-center No zipcodes registered
+    - else
+      %table.table
+        %thead.text-center
+          %tr
+            %th{scope: "col"} Code
+            %th{scope: "col"} City
+            %th{scope: "col"} Villages
+            %td{scope: "col"} Action
+        - @user.zip_codes.each do |zip_code|
+          %tr.text-center
+            %td.fw-bold= zip_code.code
+            %td= zip_code.city_fr
+            %td= all_villages_from(zip_code)
+            %td
+              %form{action: "/users/#{@user.id}/delete_zip", method: "post"}
+                != csrf_tag("/users/#{@user.id}/delete_zip")
+                %input{type: :hidden, name: 'zip_code', value: zip_code.code}
+                %input.btn.btn-danger#delete_zip_button{type: :submit, value: "Delete"}
+  .col-6
+    %h5.text-center.mb-4 CBE Numbers
+    - if @user.enterprises.empty?
+      %p.text-center No enterprise registered
+    - else
+      %table.table
+        %thead.text-center
+          %tr
+            %th{scope: "col"} Number
+            %th{scope: "col"} Denomination
+            %th{scope: "col"} Zipcode
+            %td{scope: "col"} Action
+        %tbody
+          - @user.enterprises.each do |enterprise|
+            %tr.text-center
+              %td= enterprise.id
+              %td.fw-bold
+                %a{href: "/enterprises/#{enterprise.id}"}= enterprise.name
+              %td= enterprise.zip_and_city
+              %td
+                %form{action: "/users/#{@user.id}/delete_enterprise", method: "post"}
+                  != csrf_tag("/users/#{@user.id}/delete_enterprise")
+                  %input{type: :hidden, name: 'cbe_number', value: enterprise.id}
+                  %input.btn.btn-danger#delete_enterprise_button{type: :submit, value: "Delete"}
+
+- content_for :js, assets([:js, :user])

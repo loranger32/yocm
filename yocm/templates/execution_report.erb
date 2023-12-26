@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en-EN">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Additional meta tags -->
+    <meta name="language" content="en">
+    <title>Yocm - Report of <%= @date %></title>
+  </head>
+  <body>
+    <h1 class="main_title">Yocm - Execution report</h1>
+    <h2 class="main_title">Generated at <%= Time.now %></h2>
+    <table>
+      <tr>
+        <td>Program version</td>
+        <td><%= @data.engine_version %></td>
+      </tr>
+      <tr>
+      <tr>
+        <td>Execution start time : </td>
+        <td><%= @data.start_time %></td>
+      </tr>
+      <tr>
+        <td>Execution end time : </td>
+        <td><%= @data.end_time %></td>
+      </tr>
+      <tr>
+      <tr>
+        <td>Execution duration : </td>
+        <td><%= @data.elapsed_time %></td>
+      </tr>
+      <tr>
+        <td>Target date : </td>
+        <td><%= @data.target_date %></td>
+      </tr>
+      <tr>
+        <td>Program options:</td>
+      </tr>
+      <% @data.options.each do |k, v| %>
+        <tr>
+          <td>- <%= k %></td>
+          <td><%= v %></td>
+        </tr>
+      <% end %>
+      <tr>
+        <td>Download URL :</td>
+        <td><%= @data.url %></td>
+      </tr>
+      <tr>
+        <td>Number of processed files : </td>
+        <td><strong><%= @data.total_files %></strong></td>
+      </tr>
+      <tr>
+        <td>Number of known enterprises in the local DB : </td>
+        <td><strong><%= @data.total_known %></strong></td>
+      </tr>
+      <tr>
+        <td>Number of unknown enterprises : </td>
+        <td><strong><%= @data.total_unknown %></strong></td>
+      </tr>
+      <tr>
+        <td>Number of incorporation's : </td>
+        <td><strong><%= @data.total_new %></strong></td>
+      </tr>
+      <tr>
+        <td>Number of file with invalid zip code : </td>
+        <td><strong><%= @data.zip_code_errors%></strong></td>
+      </tr>
+      <tr>
+        <td>Publications PDF's saved : </td>
+        <td><%= @data.publications_saved %></td>
+      </tr>
+      <tr>
+        <td>OCR Scans saved :</td>
+        <td><%= @data.ocr_scans_saved %></td>
+      </tr>
+      <tr>
+        <td>PNG files saved :</td>
+        <td><%= @data.pngs_saved%></td>
+      </tr>
+      <tr>
+        <td>Publications saved in the DB :</td>
+        <td><%= @data.db_storage %></td>
+      </tr>
+    </table>
+  </body>
+</html>

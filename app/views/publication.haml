@@ -1,0 +1,70 @@
+- publication_path = "/publications/#{@publication.pub_date}/#{@publication.file_name}"
+- @tab_title = @publication.file_name
+- @page_title = "Publication data (#{@publication.file_name} | <a href=\"/publications/#{@publication.pub_date}\">#{@publication.pub_date}</a>)"
+
+.row.mb-5
+  .col-2
+    %ul.mb-4.no_list_style
+      %li.mb-2
+        %a.btn.btn-primary.w-100{href: link_cbe(@enterprise_id), target: :blank} CrossRoadBank
+      %li.mb-2
+        %a.btn.btn-primary.w-100{href: link_mb(@enterprise_id), target: :blank} MB / BS
+      %li.mb-2
+        %a.btn.btn-primary.w-100{href: link_public_accounts(@enterprise_id), target: :blank} Public Accounts
+      %li.mb-2
+        %button.btn.btn-warning.w-100{type: "button", "data-bs-toggle" => "collapse",
+        "data-bs-target" => "#pub_form", "aria-expanded" => false, "aria-controls" => "pub_form"} Edit
+      %li
+        %a.btn.btn-info.w-100{href: back_to_list_link(@publication.pub_date, @referer)} Back to list
+
+  .col-4
+    .ps-4
+      - if @enterprise
+        %p.mb-1
+          %strong= @enterprise.name
+        %p.mb-3
+          %small= @enterprise.id
+        %p.mb-2= @enterprise.country_fr_and_nl
+        %p.mb-2= @enterprise.zip_and_city
+        %p.mb-2= @enterprise.street_and_number
+        - if @enterprise.box?
+          %p.mb-2 Box #{@enterprise.box}
+
+      - else
+        - if @publication.probably_new
+          %p.mb-2
+            %strong This is a new entity
+        %p No data available in local database
+        %p.mb-1
+          %strong= @publication.entity_name
+        %p.mb-3= @publication.cbe_number
+        %p
+          %strong Zip Code:
+          = ZipCode[@publication.zip_code_id].code
+    
+      .row
+        .col
+          %form.mt-3.pt-3.border-top.collapse#pub_form{class: (!@publication.complete? ? "show" : ""), edit_mode: @modify_pub, action: publication_path, method: :post}
+            %div
+              .mb-3
+                != csrf_tag(publication_path)
+                .row.mb-3
+                  .col-auto
+                    %label.col-form-label{for: 'zip_code'} Zip Code
+                  .col-auto
+                    %input.form-control{type: :text, id: 'zip_code', name: 'zip_code',
+                      value: zip_display(@publication.zip_code), size: 4, maxlength: 4, autofocus: true,
+                      placeholder: '1234'}
+
+                %input.form-check-input#batch_mode{type: "checkbox", name: "batch_mode", checked: true}
+                %label.form-check-label{for: "batch_mode"}
+                  %span Batch Mode
+                  %small (#{count_zip_errors_from_date(@publication.pub_date)} remaining)
+
+              %input.btn.btn-primary{type: :submit, value: "Save"}
+              %button.btn.btn-danger{type: "button", "data-bs-toggle" => "collapse",
+                "data-bs-target" => "#pub_form", "aria-expanded" => false, "aria-controls" => "pub_form"} Cancel
+              %a.btn.btn-warning{href: "#{publication_path}/debug"} Debug
+
+  .col-6
+    %iframe.px-3{src: link_publication(@publication), width: "100%", height: "800px"}

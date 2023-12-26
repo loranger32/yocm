@@ -1,0 +1,88 @@
+- @tab_title = date_clean(@pub_date)
+- @page_title = date_clean(@pub_date)
+- zip_errors_count = count_zip_errors_from_date(@pub_date)
+
+.row.mb-5
+  %ul.col-10.offset-1.col-lg-6.offset-lg-3.nav.nav-pills.nav-fill
+    %li.nav-item
+      %a.nav-link{href: "/publications/#{@pub_date}", class: active_link(@referer)}
+        All
+        %span.badge.bg-danger= count_all_from_date(@pub_date)
+    %li.nav-item
+      %a.nav-link{href: "/publications/#{@pub_date}/new", class: active_link(@referer, 'new')}
+        New
+        %span.badge.bg-danger= count_probably_new_from_date(@pub_date)
+    %li.nav-item
+      %a.nav-link{href: "/publications/#{@pub_date}/complete", class: complete_list_class(@referer, zip_errors_count)}
+        Complete
+        %span.badge.bg-danger= count_complete_from_date(@pub_date)
+    %li.nav-item
+      %a.nav-link{href: "/publications/#{@pub_date}/zip-code-errors", class: zip_error_list_class(@referer, zip_errors_count)}
+        Zip Errors
+        %span.badge.bg-danger= zip_errors_count
+
+.row.mb-5
+  .col-12.col-xl-10.offset-xl-1
+    %table.table.table-light.table-stripped.table-hover
+      %thead
+        %tr
+          %td
+            %strong
+              Entity Name
+              %a{href: publications_list_link(@pub_date, @referer, 'entity_name', 'asc')}
+                %img{src: "/images/arrow-up.svg", alt: "Arrow Up"}
+              %a{href: publications_list_link(@pub_date, @referer, 'entity_name', 'desc')}
+                %img{src: "/images/arrow-down.svg", alt: "Arrow Down"}
+          %td
+            %strong
+              Zip Code
+              %a{href: publications_list_link(@pub_date, @referer, 'zip_code', 'asc')}
+                %img{src: "/images/arrow-up.svg", alt: "Arrow Up"}
+              %a{href: publications_list_link(@pub_date, @referer, 'zip_code', 'desc')}
+                %img{src: "/images/arrow-down.svg", alt: "Arrow Down"}
+          %td
+            %strong
+              File Name
+              %a{href: publications_list_link(@pub_date, @referer, 'file_name', 'asc')}
+                %img{src: "/images/arrow-up.svg", alt: "Arrow Up"}
+              %a{href: publications_list_link(@pub_date, @referer, 'file_name', 'desc')}
+                %img{src: "/images/arrow-down.svg", alt: "Arrow Down"}
+          %td
+            %strong
+              CBE Number
+              %a{href: publications_list_link(@pub_date, @referer, 'cbe_number', 'asc')}
+                %img{src: "/images/arrow-up.svg", alt: "Arrow Up"}
+              %a{href: publications_list_link(@pub_date, @referer, 'cbe_number', 'desc')}
+                %img{src: "/images/arrow-down.svg", alt: "Arrow Down"}
+          %td
+            %strong
+              Complete
+              %a{href: publications_list_link(@pub_date, @referer, 'complete', 'asc')}
+                %img{src: "/images/arrow-up.svg", alt: "Arrow Up"}
+              %a{href: publications_list_link(@pub_date, @referer, 'complete', 'desc')}
+                %img{src: "/images/arrow-down.svg", alt: "Arrow Down"}
+          %td
+            %strong
+              New
+              %a{href: publications_list_link(@pub_date, @referer, 'probably_new', 'asc')}
+                %img{src: "/images/arrow-up.svg", alt: "Arrow Up"}
+              %a{href: publications_list_link(@pub_date, @referer, 'probably_new', 'desc')}
+                %img{src: "/images/arrow-down.svg", alt: "Arrow Down"}
+
+      %tbody
+        - @publications.each do |publication|
+          %tr{class: publication_row_class(publication) }
+            %td
+              - if publication.entity_name.size > 60
+                %a{href: "/publications/#{@pub_date}/#{publication.file_name}?referer=#{@referer}", "data-bs-toggle" => "tooltip",
+                  "data-bs-placement" => "top", "title" => publication.entity_name}= truncate(publication.entity_name, 60)
+              - else
+                %a{href: "/publications/#{@pub_date}/#{publication.file_name}?referer=#{@referer}"}= publication.entity_name
+            %td= publication.zip_code
+            %td
+              %a{href: "/publications/#{@pub_date}/#{publication.file_name}?referer=#{@referer}"}= publication.file_name
+            %td= publication.cbe_number
+            %td= publication.complete?
+            %td= publication.probably_new
+
+- content_for :js, assets([:js, :bs_tooltips])

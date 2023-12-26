@@ -1,0 +1,61 @@
+- @page_title = "All Publications"
+- @tab_title = "Publications Index"
+
+!= partial("partials/publications_index_pagination")
+
+.row.mb-3
+  .col-12.col-md-10.offset-md-1.col-lg-8.offset-lg-2.col-xxl-6.offset-xxl-3
+    %table.table.table-hover.bg-light
+      %thead
+        %tr
+          %td DATE
+          %td ALL
+          %td NEW
+          %td COMPLETE
+          %td ZIP ERRORS
+      %tbody
+        - @pub_dates.each do |pub_date|
+          - count_all      = count_all_from_date(pub_date)
+          - count_complete = count_complete_from_date(pub_date)
+          - count_new      = count_probably_new_from_date(pub_date)
+          - zip_errors     = count_zip_errors_from_date(pub_date)
+          %tr{class: pub_day_row_class(pub_date)}
+            %td
+              %a{href: "/publications/#{pub_date}"}= date_clean(pub_date)
+            %td
+              %a{href: "/publications/#{pub_date}"}= count_all
+            %td
+              %a{href: "/publications/#{pub_date}/new"}= count_new
+            %td
+              %a{href: "/publications/#{pub_date}/complete"}
+                = count_complete
+                %span.badge.bg-primary= ratio_complete_all(count_complete, count_all)
+            %td
+              %a{href: "/publications/#{pub_date}/zip-code-errors"}= zip_errors
+            %td
+              %button.btn.btn-warning{type: :button, "data-bs-toggle" => "modal", "data-bs-target" => "#delete-publications-modal", "data-bs-date" => pub_date} Delete
+
+!= partial("partials/publications_index_pagination")
+.mb-5
+
+.modal.fade#delete-publications-modal{"data-bs-backdrop" => "static", "data-bs-keyboard" => "false", "tabindex" => "-1",
+  "aria-labelledby" => "staticBackdropLabel", "aria-hidden" => "true"}
+  .modal-dialog.modal-dialog-centered
+    .modal-content
+      .modal-header
+        %h1.modal-title.fs-5#staticBackdropLabel Delete Publications Options
+        %button.btn-close{type: :button, "data-bs-dismiss" => "modal", "aria-label" => "Close"}
+      .modal-body
+        %p Do you want to delete :
+        %p.ms-2 - only this day
+        %p.ms-2 - all days before as well ?
+      .modal-footer
+        %button.btn.btn-secondary{type: :button, "data-bs-dismiss" => "modal"} Close
+        %form{action: "/publications/delete", method: :post}
+          != csrf_tag("/publications/delete")
+          %button.btn.btn-danger#delete-one-day{type: :submit, name: "date"} This day only
+        %form{action: "/publications/delete/many", method: :post}
+          != csrf_tag("/publications/delete/many")
+          %button.btn.btn-danger#delete-many-days{type: :submit, name: "date"} All days before
+
+- content_for :js, assets([:js, :delete_pubs])

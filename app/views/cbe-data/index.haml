@@ -1,0 +1,101 @@
+- @tab_title = @page_title = "CBE Data Management"
+
+.row
+  .col-3.offset-1
+    - if @no_data_in_db
+      %h4 No CBE data present in DB
+    - else
+      %h4 Currently in Database
+      %dl
+        %dt Extract Number
+        %dd.badge.bg-primary= @db_extract_number
+
+        %dt Snapshot date
+        %dd.badge.bg-primary= @db_snapshot_date
+
+        %dt Extract Timestamp
+        %dd.badge.bg-primary= @db_extract_time_stamp
+
+        %dt Extract Type
+        %dd.badge.bg-primary= @db_extract_type
+
+      %h4 Tables in the DB
+
+      %ul
+        - @tables.each do |table|
+          %li
+            = table.name
+            %span.badge.bg-primary= table.num_records
+
+  .col-4
+    - if @no_data_in_db && @no_data_in_folder
+      .alert.alert-danger{role: "alert"}
+        %h5.alert-heading No data available
+        %p
+          There is no data in the database and the CBE data folder is empty. Download the zip file from
+          %a{href: "https://kbopub.economie.fgov.be/kbo-open-data/login", target: :blank} the website of the CrossRoad bank
+          %hr
+          %p.m-0 Unzip the downloaded file in the 'yocm/data/cbe' folder
+    - elsif @no_data_in_db && !@no_data_in_folder
+      .alert.alert-warning{role: "alert"}
+        %h5 No data in database
+        %p But you have data available in the CBE data folder. Click the 'Import button' to import the available data
+        %hr
+        %p.m-0 It can take up to 30 minutes to complete, you may want to use the CLI
+      %btn.btn.btn-lg.btn-warning Import
+    -elsif !@no_data_in_db && @no_data_in_folder
+      .alert.alert-warning{role: "alert"}
+        %h5.alert-heading No data in the CBE data folder
+        %p
+          You don't have any data in the CBE data folder. Download them from the
+          %a{href: "https://kbopub.economie.fgov.be/kbo-open-data/login", target: :blank} the website of the CrossRoad bank
+        %hr
+        %p.m-0 Unzip the downloaded file in the 'yocm/data/cbe' folder
+    -else
+      - if @db_extract_number.to_i == @csv_extract_number.to_i
+        .alert.alert-success{role: "alert"}
+          %h5.alert-heading Data is up to date
+          %p The database already contains the latest data available in the CBE data folder.
+          %hr
+          %p.m-0
+            Check the
+            %a{href: "https://kbopub.economie.fgov.be/kbo-open-data/login", target: :blank} website of the CrossRoad Bank
+            to ensure you have the latest possible dataset.
+      - elsif @db_extract_number.to_i == @csv_extract_number.to_i - 1
+        .alert.alert-warning{role: "alert"}
+          %h5.alert-heading Data is not up to date
+          %p The database is 1 version behind the data available in the CBE data folder
+          %hr
+          %p.m-0 Click the button to proceed with update
+          %button.btn.btn-primary Update
+      -else
+        - delta = @csv_extract_number.to_i - @db_extract_number.to_i
+        .alert.alert-warning{role: "alert"}
+          %h5.alert-heading Data is not up to date
+          %p The database is #{delta} version(s) behind the data available in the CBE data folder
+          %hr
+          %p.m-0 Use the CLI to proceed with the update
+
+  .col-3.offset-1
+    - if @no_data_in_folder
+      %h4 No data in cbe data folder
+    - else
+      %h4 Currently in cbe data folder
+      %dl
+        %dt Extract Number
+        %dd.badge.bg-primary= @csv_extract_number
+
+        %dt Snapshot date
+        %dd.badge.bg-primary= @csv_snapshot_date
+
+        %dt Extract Timestamp
+        %dd.badge.bg-primary= @csv_extract_timestamp
+
+        %dt Extract Type
+        %dd.badge.bg-primary= @csv_extract_type
+
+      %h4 Files in the folder
+      %ul
+      - @csv_files.each do |file|
+        %li= file
+

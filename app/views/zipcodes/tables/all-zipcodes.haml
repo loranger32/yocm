@@ -1,0 +1,18 @@
+%table.table
+  %thead
+    %tr
+      %td
+        %strong Zip
+      %td
+        %strong Village
+      %td
+        %strong City
+      %td
+        %strong Province
+  %tbody
+  - @zipcodes.each do |zipcode|
+    %tr
+      %td= zipcode.code
+      %td= zipcode.village_fr
+      %td= zipcode.city_fr
+      %td= zipcode.province_fr

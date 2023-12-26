@@ -1,0 +1,33 @@
+- publication_path = "/publications/#{@publication.pub_date}/#{@publication.file_name}"
+- @tab_title = @page_title = "DEBUG - <a href=#{publication_path}>#{@publication.file_name}</a>"
+
+.row
+  .col-4.offset-4.d-flex.justify-content-between.mb-3
+    %p
+      %a.btn.btn-primary.btn-lg{href: "#{publication_path}/debug?retry=true"} Retry
+    %p
+      %a.btn.btn-warning.btn-lg{href: "#{publication_path}/debug"} Reset
+    %p
+      %a.btn.btn-secondary.btn-lg{href: publication_path} Back
+.row
+  .col-4.offset-1
+    %h4 REGEXP used
+    %p#regex
+      = @regexp_used
+    %form.mb-4{action: "#{publication_path}/debug", method: :get}
+      %input{type: :hidden, name: "test-new-regexp", value: "true"}
+      %span /
+      %input{type: :text, name: "new-regexp", value: @current_regexp, size: 40}
+      %span /
+      %input{type: :text, name: "new-regexp-opts", value: @current_regexp_opts, size: 4}
+      %input{type: :submit, value: "Test New Regexp"}
+    %h4 Captured text
+    %p= @captured_text
+    %h4 Matches
+    %p= @matches
+    %h4.mb-3 OCR Scan
+    %p= @ocr_text
+
+  .col-5.offset-1
+    %h4 PNG file
+    %img{src: link_to_png(@publication), width: 800}

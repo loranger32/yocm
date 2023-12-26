@@ -1,0 +1,21 @@
+%h3.text-center Daily Results
+
+.col-6.offset-3
+  %table.table
+    %thead.text-center
+      %tr
+        %th{scope: "col"} Date
+        %th{scope: "col"} Zip Codes
+        %th{scope: "col"} Enterprises
+    %tbody.text-center
+      - @results_data.each do |result_data|
+        %tr
+          %td= date_clean(result_data[:pub_date])
+          %td
+            %a{href: "/users/#{@user.id}/results/#{result_data[:pub_date]}/zipcodes"}
+              Publications
+              %span.badge.bg-danger= result_data[:matching_zip_code_count]
+          %td
+            %a{href: "/users/#{@user.id}/results/#{result_data[:pub_date]}/enterprises"}
+              Publications
+              %span.badge.bg-danger= result_data[:matching_enterprises_count]

@@ -1,0 +1,47 @@
+.row.mb-5
+  .col-4.offset-1.card
+    %h5.card-title
+      = enterprise.name
+      %span.fst-italic.fs-6.fw-normal (#{enterprise.juridical_form})
+    .card-body
+      %p.fw-bold.fst-italic= enterprise.id
+      - if enterprise.foreign_entity?
+        %h6.fst-italic.mb-3 Foreign Address:
+        %p
+          = enterprise.street_and_number
+          - if enterprise.box?
+            %span, box #{enterprise.box}
+          %br
+          = enterprise.zip_and_city
+          %br
+          = enterprise.country_fr_and_nl
+
+        %h6.fst-italic.mb-3
+          Belgian address
+          - if enterprise.has_establishment?
+            %span.fs-6.fw-normal (Belgian Establishment Unit)
+          - elsif enterprise.has_branch?
+            %span.fs-6.fw-normal (Belgian Local Branch)
+        %p
+          = enterprise.belgian_street_and_number
+          - if enterprise.belgian_box?
+            %span, box #{enterprise.belgian_box}
+          %br
+          = enterprise.belgian_zip_and_city
+      
+      - else
+        %p
+          = enterprise.street_and_number
+          - if enterprise.box?
+            %span, box #{enterprise.box}
+        %p= enterprise.zip_and_city
+        %p= enterprise.country_fr_and_nl
+
+    %a.btn.btn-primary.mb-3{href: link_cbe(enterprise.id), target: :blank} Link to CrossRoadBank
+    %a.btn.btn-primary.mb-3{href: link_mb(enterprise.id), target: :blank} Link to MB
+    %a.btn.btn-primary.mb-3{href: link_public_accounts(enterprise.id), target: :blank} Public accounts
+
+  .col-7
+    - publications = @publications || enterprise.publications_of_the_day(@pub_date)
+    - publications.each do |publication|
+      %iframe{type: 'application/pdf', src: link_publication(publication), loading: "lazy", width: "100%", height: "400px"}

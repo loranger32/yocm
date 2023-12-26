@@ -1,0 +1,23 @@
+- if @max_results_size
+  %p.mb-2
+    #{@publications.count} Results
+    %small.fst-italic (showing only the first 100 results - refine your search)
+- else
+  %p.mb-2 #{@publications.count} Results
+
+%table.table
+  %thead
+    %tr
+      %td
+        %strong
+          File Name
+      %td
+        %strong
+          Entity Name
+
+  %tbody
+    - @publications.each do |pub|
+      %tr
+        %td
+          %a{href: "/search/on-file-name?file_name=#{pub.file_name}"}= pub.file_name
+        %td= pub.entity_name
