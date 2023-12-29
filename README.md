@@ -2,15 +2,13 @@
 
 Your Own Company Monitor (Belgium)
 
-- Monitor what happens to your companies of interest and / or located in a specific geographical area, with your own local and private client.
-
-- Download and parse the daily publications of companies acts from the [_Moniteur Belge_](https://justice.belgium.be/fr/moniteur_belge), and register your companies of interest and/or specific zip codes.
+- Monitor what happens to your companies of interest and / or located in a specific geographical area, with your own local and private client : Download and parse the daily publications of companies acts from the [_Moniteur Belge_](https://justice.belgium.be/fr/moniteur_belge), and register your companies of interest and/or specific zip codes.
 
 - Access the results with a GUI (with your browser from a local server).
 
 ## 1. Introduction
 
-Every Belgian company or association must publish certain important acts, such as :
+Every Belgian company or association must publish some important acts, such as :
 
 - incorporation
 - appointment / resignation of members of the board 
@@ -96,7 +94,7 @@ Currently, there are between 0 to 10 errors per day to fix, usually less than 5.
 - [Postgresql](https://www.postgresql.org/)
 - [Tesseract](https://github.com/tesseract-ocr/tesseract) for OCR
 - [ImageMagick](https://legacy.imagemagick.org/) for image processing
-- [Ghostscript](https://www.ghostscript.com/) for converting PDF to png via ImageMagick (usually included in linux distros)
+- [Ghostscript](https://www.ghostscript.com/) for converting PDF to PNG via ImageMagick (usually included in linux distros)
 
 
 **WARNING**: The program has been tested on Ubuntu 19.10 and above, NOT Windows and NOT MacOs.
@@ -143,24 +141,25 @@ The project has only been tested with the free monthly update version. You can d
 Run `ruby yocm/yocm.rb --check-setup` to check if all dependencies are met.
 
 
-### 4.3. Configuration
+### 4.3. Configuration - ENV variables
 
-- A PostgreSQL database must exist, with an authorized user ;
+**required**
+
 
 - The following environments variables are assumed to be set :
 
-  - `DATABASE_URL` with info on how to connect to your PostgreSQL DB. For instance, when using MD5 / scram-sha-256 authentication, provide the following (plain text)
-  `DATABASE_URL="postgres://username:password@localhost/database_name"`
+  - `DATABASE_URL` with info on how to connect to your PostgreSQL DB. For instance, when using MD5 / scram-sha-256 authentication, provide the following (plain text) : `DATABASE_URL="postgres://username:password@localhost/database_name"`
 
   - `CBE_WEBSITE_LOGIN` and `CBE_WEBSITE_PASSWORD` which are your credentials for the [website of the CrossRoads Bank for Enterprises (CBE)](https://economie.fgov.be/en/themes/enterprises/crossroads-bank-enterprises/services-everyone/cbe-open-data). It will be used to ease the setup of the required CBE data into your local Database.
   
-  - `SESSION_SECRET` must be a string of at least 64 bytes and should be randomly generated.
+
+**Optional**
+
+  - **GUI** : `SESSION_SECRET` must be a string of at least 64 bytes and should be randomly generated.
   More info in the [Roda::RodaPlugins::Session documentation](http://roda.jeremyevans.net/rdoc/classes/Roda/RodaPlugins/Sessions.html). It is used by the GUI only.
   You can generate such a string by issuing the following command in a terminal at the root of the project : `rake random`
 
   - `DB_BACKUP_DIR` an absolute path to your backup directory (without the trailing slash). Used by the `rake db:backup` command.
-
-__Optional__
 
   - In order to run the test, you'll need to create two additional databases, and you should also set the following environment variables :
   
@@ -171,6 +170,8 @@ __Optional__
   - You can also use a development DB if you want to play with the engine without affecting your production data.
   For this, create the development database, and set the following environment variable: `DEV_DATABASE_URL="postgres://username:password@localhost/dev_database_name`
 
+
+**Use an .env file**
 
 You can set the environment variables as you see fit, but there is a simple way : just create a
 file called `.env` (mind the dot) at the root of the project, with the required environment variables in plain text. Thanks to the [`dotenv` ruby gem](https://github.com/bkeepers/dotenv), they will automatically be picked up when launching any of the scripts.
@@ -186,7 +187,7 @@ _This file should obviously not be placed under version control._
 
 - Go to the root of the repository ;
 
-- Run `ruby yocm/yocm.rb --check-setup` and ensure all dependencies are met ;
+- Run `ruby yocm/yocm.rb --check-setup` to ensure all dependencies are met ;
 
 - Run `bundle install`. This will install all the required Ruby libraries ;
 
@@ -231,7 +232,7 @@ Usage: ./yocm/yocm.rb [options]
 
 #### 5.1.1 Zip Codes
 
-- import the __zip codes__. The required csv file is already present under `yocm/data/zip_codes/zip_codes.csv`.  Just run :
+- import the **zip codes**. The required csv file is already present under `yocm/data/zip_codes/zip_codes.csv`.  Just run :
 
 ~~~shell
 $ ruby yocm/yocm.rb --import-zipcodes
@@ -341,10 +342,10 @@ Be aware that :
 - The _Moniteur Belge_ websites only holds 30 days of archives. So numbers greater than 30 will return a 404 error.
 
 
-The `-l` and `-p` flags are mostly used during development when an error occurs during PDF conversion or parsing the png files. **Don't use the `--days-back=` flag** when using any of them, or you risk a directory mismatch.
+The `-l` and `-p` flags are mostly used during development when an error occurs during PDF conversion or parsing the PNG files. **Don't use the `--days-back=` flag** when using any of them, or you risk a directory mismatch.
 
 - With the `-l` flag, there is no download of the archive. The engine assumes to find the unzipped PDF files in the `/yocm/data/unzipped` folder. It will then process normally and start converting the PDF's into PNG's.
-- With the `-p` flag, there is no download + there is no conversion of PDF's into png files. The engine starts immediately with the OCR part and expects to find the png files in `/yocm/data/png`.
+- With the `-p` flag, there is no download + there is no conversion of PDF's into PNG files. The engine starts immediately with the OCR part and expects to find the PNG files in `/yocm/data/png`.
 
 
 ## 7. Using the GUI
@@ -434,19 +435,20 @@ Then you can run the following command to update the DB schema : `$ rake db:all:
 
 - Due to database design, it is currently impossible to delete zip codes from the zip codes table if you have a user with registered zip codes.
 
-Workaround is to delete all users with registered zip codes and recreate them.
+  Workaround is to delete all users with registered zip codes and recreate them.
+
 
 # Road map
 
-The app is functional, but here are the things that should be done / fixed (in no particular order :
+The app is functional, but here are the things that should be done / fixed (in no particular order) :
 
 - Zip code parsing : fix issue when first number found is a street number with 4 digits
-- Add a flag to publication modal to signal if there are corresponding OCR and PNG files associated ;
+- GUI don't show the debug button on the edit publication view if there are no associated OCR and PNG files (typically when engine has been run with the `--skip-parsing`);
 - i18n : French, Dutch and English (currently mix of English and French) ;
 - The GUI needs tests ;
 - Add support for sqlite3 / replace PostgreSQL with sqlite3, which is easier to install and to handle ;
-- Allow to update cbe dataset from the gui ;
-- Add some guard clause when selecting multiple incompatible options for the db handler ;
+- Allow update cbe dataset from the gui ;
+- Add some guard clause when selecting multiple incompatible options for running the engine ;
 - Document the engine processing and the various data directories ;
 
 # Contribution
