@@ -433,23 +433,25 @@ Then you can run the following command to update the DB schema : `$ rake db:all:
 
 # Known issues
 
-- Due to database design, it is currently impossible to delete zip codes from the zip codes table if you have a user with registered zip codes.
+Due to database design, it is currently impossible to delete zip codes from the zip codes table if you have a user with registered zip codes. It is more a feature than a bug : it prevents you from accidentally deleting zip codes for which users have a subscription.
 
-  Workaround is to delete all users with registered zip codes and recreate them.
+Workaround 2: remove all zip codes subscriptions from all users, delete and upload zip codes again, then recreate subscriptions.
+Workaround 1: delete all users with registered zip codes and recreate them.
 
 
-# Road map
+# Roadmap
 
 The app is functional, but here are the things that should be done / fixed (in no particular order) :
 
-- Zip code parsing : fix issue when first number found is a street number with 4 digits
-- GUI don't show the debug button on the edit publication view if there are no associated OCR and PNG files (typically when engine has been run with the `--skip-parsing`);
-- i18n : French, Dutch and English (currently mix of English and French) ;
-- The GUI needs tests ;
-- Add support for sqlite3 / replace PostgreSQL with sqlite3, which is easier to install and to handle ;
-- Allow update cbe dataset from the gui ;
-- Add some guard clause when selecting multiple incompatible options for running the engine ;
-- Document the engine processing and the various data directories ;
+- Engine - Zip code parsing: fix issue when first number found is a street number with 4 digits
+- GUI - i18n: French, Dutch and English (currently mix of English and French) ;
+- Engine: send email with results
+- Engine - GUI: notify user when a subscribed entity is deleted from the db
+- GUI: add tests
+- Engine + GUI: add support for sqlite3 / replace PostgreSQL with sqlite3, which is easier to install and to handle ;
+- GUI:  allow update cbe dataset from the gui ;
+- Engine: add some guard clause when selecting multiple incompatible options for running the engine ;
+- Doc: document the engine processing and the various data directories ;
 
 # Contribution
 
