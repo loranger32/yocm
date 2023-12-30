@@ -7,6 +7,12 @@ module Yocm
       button_class
     end
 
+    def pub_has_ocr_and_png?(publication)
+      #return true
+      File.exist?("app/public/#{publication.pub_date.to_s.delete("-")}/png/#{publication.file_name.sub("pdf", "png")}") &&
+        File.exist?("app/public/#{publication.pub_date.to_s.delete("-")}/ocr/#{publication.file_name.sub("pdf", "txt")}")
+    end
+
     def link_cbe(cbe_number)
       "https://kbopub.economie.fgov.be/kbopub/zoeknummerform.html?nummer=#{cbe_number}&actionLu=Recherche"
     end
