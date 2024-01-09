@@ -27,10 +27,10 @@ module Yocm
 
       cbe_data_handler = Yocm::CBEDataHandler.new(db: DB)
 
-      if @options.import?
+      if @options.import_cbe?
         cbe_data_handler.import
         exit
-      elsif @options.update?
+      elsif @options.update_cbe?
         cbe_data_handler.update
         exit
       elsif @options.delete_cbe_data?
