@@ -3,6 +3,10 @@ require "standard/rake"
 require "dotenv"
 Dotenv.load
 
+DB_NAME = "yocm.db"
+DEV_DB_NAME = "yocm_dev.db"
+TEST_DB_NAME = "yocm_test.db"
+
 Rake::TestTask.new do |t|
   t.pattern = "test/**/*_test.rb"
   t.warning = false
@@ -37,24 +41,24 @@ MIGRATIONS_PATH = File.expand_path("db/migrations", __dir__)
 SCHEMA_PATH = File.expand_path("db/schema", __dir__)
 
 def check_pending_migration(db_url, db_name)
-  Sequel.connect(db_url) do |db|
+  Sequel.sqlite(db_url) do |db|
     if Sequel::Migrator.is_current?(db, MIGRATIONS_PATH)
       puts "No pending migration in #{db_name}"
     else
-      puts "There are pending migrations in #{db_name}. Run 'rake db:migrate' to apply them"
+      puts "There are pending migrations in #{db_name}. Run 'rake db:[all?|test?|dev?|]migrate' to apply them"
     end
   end
 end
 
 def revert_all_migrations(db_url, db_name)
-  Sequel.connect(db_url) do |db|
+  Sequel.sqlite(db_url) do |db|
     Sequel::Migrator.run(db, MIGRATIONS_PATH, target: 0)
     puts "All migrations reverted on #{db_name}"
   end
 end
 
 def migrate_db(db_url, db_name, version)
-  Sequel.connect(db_url) do |db|
+  Sequel.sqlite(db_url) do |db|
     Sequel::Migrator.run(db, MIGRATIONS_PATH, target: version)
     puts "#{db_name} migrated"
   end
@@ -66,10 +70,18 @@ task :c do
 end
 
 namespace :db do
+  base_db_path = ENV["BASE_DB_PATH"] ? ENV["BASE_DB_PATH"] : "db"
+
+  production_db_url = File.join(base_db_path, DB_NAME)
+  dev_db_url        = File.join(base_db_path, DEV_DB_NAME)
+
+  # test db is always in db folder
+  test_db_url       = File.join("db", TEST_DB_NAME)
+
   desc "Run migrations on production DB"
   task :migrate, [:version] do |_, args|
     version = args[:version].to_i if args[:version]
-    migrate_db(ENV["DATABASE_URL"], "Production DB", version)
+    migrate_db(production_db_url, "Production DB", version)
   end
 
   desc "Revert all migrations on production DB"
@@ -78,7 +90,7 @@ namespace :db do
     puts "Please confirm you made a backup of the DB ('Yes/no')"
     answer = $stdin.gets.chomp
     if answer == "Yes"
-      revert_all_migrations(ENV["DATABASE_URL"], "Production DB")
+      revert_all_migrations(production_db_url, "Production DB")
     else
       puts "Abort reverting PRODUCTION DB"
     end
@@ -86,59 +98,41 @@ namespace :db do
 
   desc "Check pending migrations on production DB"
   task :pending do
-    check_pending_migration(ENV["DATABASE_URL"], "Production DB")
+    check_pending_migration(production_db_url, "Production DB")
   end
 
   desc "Dump database schema with timestamp"
   task :schema do
     timestamp = Time.now.strftime("%Y%m%d%H%M%S")
     destination = File.join(SCHEMA_PATH, "001_schema_#{timestamp}.rb")
-    system "rm #{SCHEMA_PATH}/*"
-    system("sequel -D #{ENV["DATABASE_URL"]} > #{destination}")
+    #system "rm #{SCHEMA_PATH}/*"
+    system("sequel -D sqlite://#{production_db_url} > #{destination}")
     puts "Schema dumped to #{destination}"
   end
 
-  # Depending on your Postgres settings, it may ask you the password to access the DB
   desc "Backup Production DB"
   task :backup do
     time_stamp = Time.now.strftime("%Y%m%d%H%M%S")
-    backup_path = File.join(ENV["DB_BACKUP_DIR"], "dcap_db_#{time_stamp}")
-    `pg_dump -F p yocm > #{backup_path}`
+    backup_path = File.join(ENV["DB_BACKUP_DIR"], "yocm_db_#{time_stamp}")
+    `cp #{production_db_url} #{backup_path}`
     puts "Successfully created backup of production DB at #{backup_path}"
-  end
-
-  # TO BE DELETED (or make it a CLI command - already a GUI command)
-  desc "Delete publications before date (\"YYYY-MM-DD\")"
-  task :delete_pub, [:date] do |_, args|
-    date = Date.parse(args[:date])
-    Sequel.connect(ENV["DATABASE_URL"]) do |db|
-      puts "Are you sure ? All pub older than #{date} will be permanently deleted ('Yes/no')"
-      answer = $stdin.gets.chomp
-
-      if %w[yes Yes y].include?(answer)
-        number_deleted = db[:publications].where(Sequel[:pub_date] < date).delete
-        puts "#{number_deleted} publications successfully deleted."
-      else
-        puts "Delete operation aborted"
-      end
-    end
   end
 
   namespace :test do
     desc "Run migrations on test DB"
     task :migrate, [:version] do |_, args|
       version = args[:version].to_i if args[:version]
-      migrate_db(ENV["TEST_DATABASE_URL"], "Test DB", version)
+      migrate_db(test_db_url, "Test DB", version)
     end
 
     desc "Revert all migrations on test DB"
     task :reset do
-      revert_all_migrations(ENV["TEST_DATABASE_URL"], "Test DB")
+      revert_all_migrations(test_db_url, "Test DB")
     end
 
     desc "Check pending migrations on test database"
     task :pending do
-      check_pending_migration(ENV["TEST_DATABASE_URL"], "TEST DB")
+      check_pending_migration(test_db_url, "Test DB")
     end
 
     desc "Access an irb console with test database connection initialized"
@@ -151,17 +145,17 @@ namespace :db do
     desc "Run migrations on development DB"
     task :migrate, [:version] do |_, args|
       version = args[:version].to_i if args[:version]
-      migrate_db(ENV["DEV_DATABASE_URL"], "Development DB", version)
+      migrate_db(dev_db_url, "Development DB", version)
     end
 
     desc "Revert all migrations on development DB"
     task :reset do
-      revert_all_migrations(ENV["DEV_DATABASE_URL"], "Development DB")
+      revert_all_migrations(dev_db_url, "Development DB")
     end
 
     desc "Check pending migrations on development DB"
     task :pending do
-      check_pending_migration(ENV["DEV_DATABASE_URL"], "Development DB")
+      check_pending_migration(dev_db_url, "Development DB")
     end
 
     desc "Access an irb console with development database connection initialized"

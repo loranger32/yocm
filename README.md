@@ -65,7 +65,7 @@ If you also want the zip code feature, the parsing requires _additional computin
 
 ### 3.1. Basic Parsing
 
-An xml file ships with the daily zip archive provided by the _Moniteur Belge_, and makes the link between a publication and the relevant entity, using the CBE number.
+An XML file ships with the daily zip archive provided by the _Moniteur Belge_, and makes the link between a publication and the relevant entity, using the CBE number.
 
 The engine just links the CBE number to the publication in the DB, and its done. 
 
@@ -75,7 +75,7 @@ And with the CBE number, you get the useful links to the various websites where 
 
 ### 3.2. Zip code parsing
 
-Unfortunately, _if you make use of the free dataset from the CBE_, it is only updated monthly.
+Unfortunately, _if you make use of the free data set from the CBE_, it is only updated monthly.
 
 That means that for every publication concerning a _new company or association_ (typically, the act of incorporation), the data won't be available yet in your local DB.
 
@@ -90,16 +90,10 @@ Currently, there are between 0 to 10 errors per day to fix, usually less than 5.
 
 ## 4. Setup
 
-- [Ruby](https://www.ruby-lang.org) as programming language
-- [Postgresql](https://www.postgresql.org/)
-- [Tesseract](https://github.com/tesseract-ocr/tesseract) for OCR
-- [ImageMagick](https://legacy.imagemagick.org/) for image processing
-- [Ghostscript](https://www.ghostscript.com/) for converting PDF to PNG via ImageMagick (usually included in linux distros)
+**WARNING**: The program has been tested on Ubuntu 19.10 and above, and should work on MacOs. It does not work on Windows (at least for now).
 
 
-**WARNING**: The program has been tested on Ubuntu 19.10 and above, NOT Windows and NOT MacOs.
-
-### 4.1. Required dataset from the CBE
+### 4.1. Required data set from the CBE
 
 You'll need to download the data publicly available on the
 [website of the CrossRoads Bank for Enterprises (CBE)](https://economie.fgov.be/en/themes/enterprises/crossroads-bank-enterprises/services-everyone/cbe-open-data).
@@ -108,16 +102,16 @@ In order to use these data, you'll also need to register and accept the terms of
 
 There is a free version, updated monthly, and a paid version, updated daily.
 
-The project has only been tested with the free monthly update version. You can download the updated data on the same website page, and the project ships with a small CLI utility to make the update easy.
+The project has only been tested with the free monthly update version. You can download the updated data on the same website page, and the project ships with a small CLI utility to ease and automate the import and update of the data into the DB.
 
 
 ### 4.2. Dependencies :
 
 - For basic parsing :
 
-  - [PostgreSQL](https://www.postgresql.org/)
-
   - [Ruby 3+](https://www.ruby-lang.org)
+
+  - [SQLite3](https://www.sqlite.org/) + CLI tool
 
   - _optional_ : to easily switch from ruby version, and to avoid privilege issues when installing ruby libraries (gems),
     you are encouraged to use a ruby version manager like [rbenv](https://github.com/rbenv/rbenv), [RVM](https://rvm.io/) or [asdf](https://github.com/asdf-vm/asdf)
@@ -125,7 +119,7 @@ The project has only been tested with the free monthly update version. You can d
 
 - For zip Code parsing:
 
-  - [ImageMagick](https://legacy.imagemagick.org/) version **6** required. You need to allow the treatment of pdf in the security policies. If it fits your security policy, in the file `policy.xml`, just comment out the line :
+  - [ImageMagick](https://legacy.imagemagick.org/) version **6** required. You need to allow the treatment of PDF in the security policies. If it fits your security policy, in the file `policy.xml`, just comment out the line :
 
     ~~~ xml
       <policy domain="coder" rights="none" pattern="PDF" />
@@ -133,9 +127,9 @@ The project has only been tested with the free monthly update version. You can d
 
     This file is usually found at `/etc/ImageMagick6/policy.xml`.
 
-  - [Tesseract-OCR](https://github.com/tesseract-ocr/tesseract), with the languages `fra`, `nld` and `deu`;
+  - [Tesseract-OCR](https://github.com/tesseract-ocr/tesseract), for OCR with the languages `fra`, `nld` and `deu`;
 
-  - [Ghostscript](https://www.ghostscript.com/index.html)
+  - [Ghostscript](https://www.ghostscript.com/index.html) for converting PDF to PNG via ImageMagick (usually included in linux distros)
 
 
 Run `ruby yocm/yocm.rb --check-setup` to check if all dependencies are met.
@@ -145,30 +139,20 @@ Run `ruby yocm/yocm.rb --check-setup` to check if all dependencies are met.
 
 **required**
 
-
-- The following environments variables are assumed to be set :
-
-  - `DATABASE_URL` with info on how to connect to your PostgreSQL DB. For instance, when using MD5 / scram-sha-256 authentication, provide the following (plain text) : `DATABASE_URL="postgres://username:password@localhost/database_name"`
+- The following environments variables MUST be set :
 
   - `CBE_WEBSITE_LOGIN` and `CBE_WEBSITE_PASSWORD` which are your credentials for the [website of the CrossRoads Bank for Enterprises (CBE)](https://economie.fgov.be/en/themes/enterprises/crossroads-bank-enterprises/services-everyone/cbe-open-data). It will be used to ease the setup of the required CBE data into your local Database.
   
-
-**Optional**
-
   - **GUI** : `SESSION_SECRET` must be a string of at least 64 bytes and should be randomly generated.
   More info in the [Roda::RodaPlugins::Session documentation](http://roda.jeremyevans.net/rdoc/classes/Roda/RodaPlugins/Sessions.html). It is used by the GUI only.
   You can generate such a string by issuing the following command in a terminal at the root of the project : `rake random`
 
+
+**Optional**
+
+  - `BASE_DB_PATH` which must be an absolute path to an existing directory where you want to store your production and development DB. If the variable is not set, these 2 DB's are created inside the `db` directory (and are ignored by git due to the .gitignore file).
+
   - `DB_BACKUP_DIR` an absolute path to your backup directory (without the trailing slash). Used by the `rake db:backup` command.
-
-  - In order to run the test, you'll need to create two additional databases, and you should also set the following environment variables :
-  
-    - `TEST_DATABASE_URL="postgres://username:password@localhost/test_database_name`
-    - `DUMMY_DATABASE_URL="postgres://username:password@localhost/your_dummy_db_name"`
-
-
-  - You can also use a development DB if you want to play with the engine without affecting your production data.
-  For this, create the development database, and set the following environment variable: `DEV_DATABASE_URL="postgres://username:password@localhost/dev_database_name`
 
 
 **Use an .env file**
@@ -176,7 +160,7 @@ Run `ruby yocm/yocm.rb --check-setup` to check if all dependencies are met.
 You can set the environment variables as you see fit, but there is a simple way : just create a
 file called `.env` (mind the dot) at the root of the project, with the required environment variables in plain text. Thanks to the [`dotenv` ruby gem](https://github.com/bkeepers/dotenv), they will automatically be picked up when launching any of the scripts.
 
-_This file should obviously not be placed under version control._
+_This file will be ignored by git due to the .gitignore file. Don't change this setting !_
 
 
 ### 4.4 Final steps
@@ -189,7 +173,7 @@ _This file should obviously not be placed under version control._
 
 - Run `ruby yocm/yocm.rb --check-setup` to ensure all dependencies are met ;
 
-- Run `bundle install`. This will install all the required Ruby libraries ;
+- Run `bundle install`. This will install all the required Ruby libraries from the [rubygems website](https://rubygems.org);
 
 - Run `rake db:migrate`. This will setup the required tables in the production database.
 
@@ -256,6 +240,8 @@ Most of the time, the update manager is all you need.
 
 It is _strongly advised_ to run the update manager once a month, because the CBE publishes monthly updates.
 
+Import can take up to an hour depending on your hardware. Update usually less than a minute.
+
 
 ##### 5.1.2.2 Do it manually
 
@@ -282,17 +268,15 @@ If for any reason you don't want or can't use the update manager, the manual ste
 
   Free updated CBE data is published monthly (every first Sunday of the month).
 
-  You can choose from a `full` dataset with updated data, or a smaller dataset called `update` with only the data to delete and the new data to insert. The latter takes way much time.
+  You can choose from a `full` data set with the latest data, or a smaller data set called `update` with only the data to delete and the new data to insert. The latter takes way less time.
 
-  The datasets obtained from the CBE are marked with an extract number (see the meta.csv file). If you already have the before to last data extract (e.g. new dataset extract number is 102, and you have 101), then you can simply download the last `update` zip file from the [CBE website](https://economie.fgov.be/en/themes/enterprises/crossroads-bank-enterprises/services-everyone/cbe-open-data), and unzip it in the same directory as for a full import(`yocm/data/cbe_data`).
+  The datasets obtained from the CBE are marked with an extract number (see the meta.csv file). If you already have the before to last data extract (e.g. new data set extract number is 102, and you have 101), then you can simply download the last `update` zip file from the [CBE website](https://economie.fgov.be/en/themes/enterprises/crossroads-bank-enterprises/services-everyone/cbe-open-data), and unzip it in the same directory as for a full import(`yocm/data/cbe_data`).
 
   Then run : `$ ruby yocm/yocm.rb --update-cbe`
 
-  On the same computers, it will usually take less than a minute to update.
-
 __How to check data extract number ?__
 
-The easy way is to run `ruby yocm/yocm.rb --extract-version`. It wil tell you what are the dataset versions in your DB, in your local folder and on the CBE website.
+The easy way is to run `ruby yocm/yocm.rb --extract-version`. It will tell you what are the data set versions in your DB, in your local folder and on the CBE website.
 
 Note that if the extractNumbers do not fit together, an error will be raised. You have two options :
 
@@ -342,10 +326,10 @@ Be aware that :
 - The _Moniteur Belge_ websites only holds 30 days of archives. So numbers greater than 30 will return a 404 error.
 
 
-The `-l` and `-p` flags are mostly used during development when an error occurs during PDF conversion or parsing the PNG files. **Don't use the `--days-back=` flag** when using any of them, or you risk a directory mismatch.
+The `--local-files` and `--png-present` flags are mostly used during development when an error occurs during PDF conversion or parsing the PNG files. **Don't use the `--days-back=` flag** when using any of them, or you risk a directory mismatch.
 
-- With the `-l` flag, there is no download of the archive. The engine assumes to find the unzipped PDF files in the `/yocm/data/unzipped` folder. It will then process normally and start converting the PDF's into PNG's.
-- With the `-p` flag, there is no download + there is no conversion of PDF's into PNG files. The engine starts immediately with the OCR part and expects to find the PNG files in `/yocm/data/png`.
+- With the `--local-files` flag, there is no download of the archive from the website of the _Moniteur Belge_. The engine assumes to find the unzipped PDF files in the `/yocm/data/unzipped` folder. It will then process normally and start converting the PDF's into PNG's.
+- With the `--png-present` flag, there is no download + there is no conversion of PDF's into PNG files. The engine starts immediately with the OCR part and expects to find the PNG files in `/yocm/data/png`.
 
 
 ## 7. Using the GUI
@@ -354,6 +338,7 @@ To launch the GUI, pass the `-g` flag (or `--gui`) : `ruby yocm/yocm.rb -g` and 
 
 You can also start a development server, which reloads all the files when a file is changed. It also displays debugging info when an error occurs : `$ rake ds`
 
+**EDIT: the following section needs an update, buts still gives an overall overview of the current features**
 
 This is the home page, showing the global results of the last parsing.
 
@@ -414,7 +399,7 @@ Simply issue a `git pull` command from the root of the project.
 
 Changes to the GUI and the engine shouldn't introduce breaking change, but that can happen, so you are strongly advised to review the changes before updating the project.
 
-But **changes to the database schema will almost always break something**, so you absolutely need to review it before using the updated version.
+But **changes to the database schema could break something**, or at a minimum require you to issue a `rake db:all:migrate` so you absolutely need to review the `changelog.md` file before using the updated version.
 
 Please also note that some changes in the database schema are required due to changes in the data schema of the CBE itself. Sometimes, it's impossible to update the data from the CBE without applying the changes first.
 
@@ -444,14 +429,13 @@ Workaround 1: delete all users with registered zip codes and recreate them.
 The app is functional, but here are the things that should be done / fixed (in no particular order) :
 
 - Engine - Zip code parsing: fix issue when first number found is a street number with 4 digits
-- GUI - i18n: French, Dutch and English (currently mix of English and French) ;
 - Engine: send email with results
+- Engine: add some guard clause when selecting multiple incompatible options for running the engine
 - Engine - GUI: notify user when a subscribed entity is deleted from the db
+- GUI - i18n: French, Dutch and English (currently mix of English and French)
 - GUI: add tests
-- Engine + GUI: add support for sqlite3 / replace PostgreSQL with sqlite3, which is easier to install and to handle ;
-- GUI:  allow update cbe dataset from the gui ;
-- Engine: add some guard clause when selecting multiple incompatible options for running the engine ;
-- Doc: document the engine processing and the various data directories ;
+- GUI:  allow update cbe data set from the gui
+- Doc: document the engine processing and the various data directories
 
 # Contribution
 

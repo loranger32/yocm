@@ -10,9 +10,7 @@ module Yocm
 
     def import
       check_table_is_empty
-
-      # zip_code 'id' is a primary key referenced by publications table (zip_code_id)
-      @db.reset_primary_key_sequence(:zip_codes)
+      reset_pk_seq!
 
       @db.transaction do
         # Add the unknown zip code '0000' required by the engine, as the first record.
@@ -37,6 +35,10 @@ module Yocm
     end
 
     private
+
+    def reset_pk_seq!
+      DB[:sqlite_sequence].where(name: "zip_codes").update(seq: 0)
+    end
 
     def check_table_is_empty
       present_zip_codes_count = @db[:zip_codes].count

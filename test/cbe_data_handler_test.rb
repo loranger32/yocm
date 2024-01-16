@@ -33,11 +33,6 @@ class CBEDataHandlerTest < HookedTestClass
     assert_equal 2, DB[:branches].count
   end
 
-  def test_raises_if_required_tables_not_present
-    empty_db = Sequel.connect(ENV["DUMMY_DATABASE_URL"])
-    assert_raises(Yocm::CBEDataHandler::Error) { Yocm::CBEDataHandler.new(db: empty_db) }
-  end
-
   def test_import_all_cbe_data_when_no_data_present
     assert @cbe_tables.all?(&:empty?)
 

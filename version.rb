@@ -1,3 +1,3 @@
 module Yocm
-  VERSION = "9.0.0".freeze
+  VERSION = "0.10.0".freeze
 end

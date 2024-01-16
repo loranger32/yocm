@@ -113,8 +113,6 @@ module Yocm
       def unzip_cbe_archive(file_name)
         cbe_zip = File.join(CBE_DATA_DIR, file_name)
 
-        # YJIT needs to be disabled until Ruby 3.3
-        # Check https://github.com/rubyzip/rubyzip/pull/550
         Zip.on_exists_proc = true # Configure RubyZip to allow rewriting existing files
 
         Zip::File.open(cbe_zip) do |zip_file|

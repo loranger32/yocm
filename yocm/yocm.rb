@@ -66,7 +66,7 @@ if options.launch_gui?
   system("bundle exec rackup app/config.ru")
 end
 
-ENV["RUN_ENV"] == "development" if options.devdb?
+ENV["RUN_ENV"] = "development" if options.devdb?
 require_relative "../db/db"
 
 if options.data_operations?

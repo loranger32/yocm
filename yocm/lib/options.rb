@@ -20,7 +20,7 @@ module Yocm
 
         opts.on("-s", "--skip-parsing", "Don't parse zip code (with -e or --engine)")
 
-        # -l and -p flags are mostly useful in development
+        # --local-files and --png-present flags are mostly useful in development
         opts.on("--local-files", "Process local publication files, no download")
 
         opts.on("--png-present", "PNGs already presents, don't do the conversion (no download)")

@@ -103,7 +103,7 @@ class ModelsTest < HookedTestClass
     cbe_metadata = CbeMetadata.where(extract_number: 3).first
     refute_nil cbe_metadata
     assert_equal Date.parse("31-01-2022"), cbe_metadata.snapshot_date
-    assert_equal Time.parse("05-02-2022 17:14:10"), cbe_metadata.extract_time_stamp
+    assert_equal Time.parse("05-02-2022 17:14:10"), Time.parse(cbe_metadata.extract_time_stamp)
     assert_equal "full", cbe_metadata.extract_type
     assert_equal "1.0.0", cbe_metadata.version
   end
@@ -235,7 +235,7 @@ class ModelsTest < HookedTestClass
     assert_respond_to pub, :known
   end
 
-  def test_users_has_required_accessors_and_association
+  def test_user_has_required_accessors_and_association
     user = User.where(email: "test_user@example.com").first
     refute_nil user
     user.add_zip_code(ZipCode[2])

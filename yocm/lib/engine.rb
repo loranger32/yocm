@@ -73,7 +73,7 @@ module Yocm
       end
 
       ## Download and decompress zip archive, unless processing local files option is set
-      unless @options.process_local_files?
+      unless @options.process_local_files? || @options.png_present?
         $log.info("Creating url to download...")
 
         url = UriBuilder.new(date: target_date).build

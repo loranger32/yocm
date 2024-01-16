@@ -6,7 +6,7 @@ module Yocm
     Binary = Data.define(:name, :cmd)
     Lang   = Data.define(:name, :code)
 
-    REQUIRED_BINARIES = [PG        = Binary.new("Postgresql", "psql"),
+    REQUIRED_BINARIES = [SQLITE3   = Binary.new("SQLite", "sqlite3"),
                          MAGICK    = Binary.new("ImageMagick", "convert"),
                          GS        = Binary.new("Ghostscript", "ghostscript"),
                          TESSERACT = Binary.new("Tesseract", "tesseract")].freeze
@@ -58,11 +58,11 @@ module Yocm
       end
 
       def check_bin?(bin)
-        system("#{bin.cmd} --help >/dev/null 2>&1")
+        system("#{bin.cmd} --version >/dev/null 2>&1")
       end
 
       def db_present?
-        @binaries.include?(PG)
+        @binaries.include?(SQLITE3)
       end
 
       def display_banner

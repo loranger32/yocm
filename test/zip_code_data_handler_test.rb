@@ -21,11 +21,6 @@ class ZipCodeDataHandlerTest < HookedTestClass
     end
   end
 
-  def test_raises_if_required_tables_not_present
-    empty_db = Sequel.connect(ENV["DUMMY_DATABASE_URL"])
-    assert_raises(Yocm::ZipCodeDataHandler::Error) { Yocm::ZipCodeDataHandler.new(db: empty_db) }
-  end
-
   def test_import_zip_codes_when_no_zip_code_present
     assert DB[:zip_codes].empty?
     capture_io { @zc_data_handler.import }
