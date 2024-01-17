@@ -1,3 +1,6 @@
+# MAIN
+
+- simplify navbar menu
 # VERSION 0.10.0 - 16 January 2024
 
 **BREAKING CHANGES**

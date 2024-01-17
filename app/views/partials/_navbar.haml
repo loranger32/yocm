@@ -10,17 +10,22 @@
     .collapse.navbar-collapse#navbarToggler01
       %ul.navbar-nav.me-auto.mb-2.mb-sm-0
         %li.nav-item
-          %a.nav-link{href: "/users/results"} Results
-        %li.nav-item
           %a.nav-link{href: "/publications"} Publications
         %li.nav-item
+          %a.nav-link{href: "/users/results"} Results
+        %li.nav-item
           %a.nav-link{href: "/users"} Users
-        %li.nav-item
-          %a.nav-link{href: "/search"} Search
-        %li.nav-item
-          %a.nav-link{href: "/zipcodes"} Zip Codes
-        %li.nav-item
-          %a.nav-link{href: "/cbe-data"} CBE Data
+        %li.nav-item.dropdown
+          %a.nav-link.dropdown-toggle#navbarDropdown{href: "#", role: "button", "data-bs-toggle" => "dropdown", "aria-expanded" => false} Data
+          %ul.dropdown-menu{"aria-labelledby" => "navbarDropdown"}
+            %li
+              %a.dropdown-item{href: "/search", target: :blank} Search CBE data
+            %li
+              %a.dropdown-item{href: "/zipcodes", target: :blank} Search zip codes
+            %li
+              %hr.dropdown-divider
+            %li
+              %a.dropdown-item{href: "/cbe-data"} CBE data status
         %li.nav-item
           %a.nav-link{href: "/about"} About
     - if @active_user
