@@ -7,13 +7,11 @@ gem "dotenv", "~> 2.8", ">= 2.8.1"
 gem "kramdown", "~> 2.4", ">= 2.4.0"
 gem "logger", "~> 1.5", ">= 1.5.3"
 gem "mechanize", "~> 2.9", ">= 2.9.1"
-gem "pg", "~> 1.4", ">= 1.4.5"
 gem "pry-byebug", "~> 3.10", ">= 3.10.1"
 gem "rake", "~> 13.0", ">= 13.0.6"
 gem "rtesseract", "~> 3.1", ">= 3.1.2"
 gem "rubyzip", "3.0.0.alpha", require: "zip"
 gem "sequel", "~> 5.65"
-gem "sequel_pg", "~> 1.17", require: "sequel"
 gem 'sqlite3', '~> 1.7'
 gem "standard", "~> 1.22", ">= 1.22.1"
 
