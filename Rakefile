@@ -70,7 +70,11 @@ task :c do
 end
 
 namespace :db do
-  base_db_path = ENV["BASE_DB_PATH"] ? ENV["BASE_DB_PATH"] : "db"
+  base_db_path = if ENV["BASE_DB_PATH"] && File.absolute_path?(ENV["BASE_DB_PATH"])
+    ENV["BASE_DB_PATH"]
+  else
+    "db"
+  end
 
   production_db_url = File.join(base_db_path, DB_NAME)
   dev_db_url        = File.join(base_db_path, DEV_DB_NAME)
@@ -112,6 +116,10 @@ namespace :db do
 
   desc "Backup Production DB"
   task :backup do
+    unless File.absolute_path?(ENV["DB_BACKUP_DIR"])
+      abort("The directory path for the backups must be an absolute path, got a relative instead - check your env variable")
+    end
+
     time_stamp = Time.now.strftime("%Y%m%d%H%M%S")
     backup_path = File.join(ENV["DB_BACKUP_DIR"], "yocm_db_#{time_stamp}")
     `cp #{production_db_url} #{backup_path}`

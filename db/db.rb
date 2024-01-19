@@ -6,7 +6,11 @@ module Yocm
   DEV_DB_NAME = "yocm_dev.db"
   TEST_DB_NAME = "yocm_test.db"
 
-  base_db_path = ENV["BASE_DB_PATH"] || File.expand_path(__dir__)
+  base_db_path = if ENV["BASE_DB_PATH"] && File.absolute_path?(ENV["BASE_DB_PATH"])
+    ENV["BASE_DB_PATH"]
+  else
+    File.expand_path(__dir__)
+  end
 
   if [ENV["RACK_ENV"], ENV["RAKE_CONSOLE_ENV"], ENV["RUN_ENV"]].any? { _1 == "test" }
     DB = Sequel.sqlite(File.join(File.expand_path(__dir__), TEST_DB_NAME))
