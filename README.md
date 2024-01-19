@@ -85,7 +85,13 @@ That's where the zip code parsing feature comes in : the parsing engine reads al
 
 If one is found, the engine links it with the publication. If not, it marks the publication with an error, and you get the ability to inspect it with the GUI, and assign the zip code yourself with the publication on the screen.
 
-Currently, there are between 0 to 10 errors per day to fix, usually less than 5. And there is still room for improvement.
+Currently, there are between 0 to 10 errors per day to fix, usually less than 5. Most of the time, the errors are due to :
+
+- a handwritten zip code
+- a badly scanned document
+- the zip code not being mentioned on the document
+
+And there little that can be done to overcome these issues.
 
 
 ## 4. Setup
@@ -137,7 +143,7 @@ Run `ruby yocm/yocm.rb --check-setup` to check if all dependencies are met.
 
 ### 4.3. Configuration - ENV variables
 
-**required**
+#### 4.3.1 Required
 
 - The following environments variables MUST be set :
 
@@ -148,14 +154,14 @@ Run `ruby yocm/yocm.rb --check-setup` to check if all dependencies are met.
   You can generate such a string by issuing the following command in a terminal at the root of the project : `rake random`
 
 
-**Optional**
+#### 4.3.2 Optional
 
-  - `BASE_DB_PATH` which must be an absolute path to an existing directory where you want to store your production and development DB. If the variable is not set, these 2 DB's are created inside the `db` directory (and are ignored by git due to the .gitignore file).
+  - `BASE_DB_PATH` an absolute path to an existing directory where you want to store your production and development DB. If the variable is not set, these 2 DB's are created inside the `db` directory (and are ignored by git due to the .gitignore file).
 
   - `DB_BACKUP_DIR` an absolute path to your backup directory (without the trailing slash). Used by the `rake db:backup` command.
 
 
-**Use an .env file**
+#### 4.3.3 Use a `.env` file
 
 You can set the environment variables as you see fit, but there is a simple way : just create a
 file called `.env` (mind the dot) at the root of the project, with the required environment variables in plain text. Thanks to the [`dotenv` ruby gem](https://github.com/bkeepers/dotenv), they will automatically be picked up when launching any of the scripts.
@@ -428,10 +434,10 @@ Workaround 1: delete all users with registered zip codes and recreate them.
 
 The app is functional, but here are the things that should be done / fixed (in no particular order) :
 
-- Engine - Zip code parsing: fix issue when first number found is a street number with 4 digits
 - Engine: send email with results
 - Engine: add some guard clause when selecting multiple incompatible options for running the engine
 - Engine - GUI: notify user when a subscribed entity is deleted from the db
+- GUI : allow to add an entity to the follow list from the results page
 - GUI - i18n: French, Dutch and English (currently mix of English and French)
 - GUI: add tests
 - GUI:  allow update cbe data set from the gui

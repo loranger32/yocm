@@ -1,6 +1,8 @@
 # MAIN
 
 - simplify navbar menu
+
+- zip code parsing : if multiple 4 digits numbers are found, check them all to find the first that match a valid zip code (if any)
 # VERSION 0.10.0 - 16 January 2024
 
 **BREAKING CHANGES**

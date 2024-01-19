@@ -125,6 +125,7 @@ class ZipCodeEngineMainMethodTest < HookedTestClass
     super
   end
 
+  # Mind the space before 'Siège' - required by the regexp
   def test_returns_a_string_0000_when_invalid_zip_code_provided
     source = " Siège : Lost Road 42, 4321 Nowhere"
     assert_equal "0000", retrieve_zip_code_from(source)
@@ -143,5 +144,10 @@ class ZipCodeEngineMainMethodTest < HookedTestClass
   def test_returns_0000_if_no_match
     source = "No Match"
     assert_equal "0000", retrieve_zip_code_from(source)
+  end
+
+  def test_returns_correct_zip_code_if_multiple_four_digits_numbers_found
+    source = " Siège : Lost Road 1999, 4000 Liège. Enterprise founded in 1894"
+    assert_equal "4000", retrieve_zip_code_from(source)
   end
 end
