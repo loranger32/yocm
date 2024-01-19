@@ -41,9 +41,9 @@ module Yocm
 
 
     def retrieve_enterprise_from_cbe_number_input(number)
-      if number.match?(/\A0\d{3}\.\d{3}\.\d{3}\z/)
+      if number.match?(/\A[10]\d{3}\.\d{3}\.\d{3}\z/)
         Enterprise[number]
-      elsif number.match?(/\A0\d{9}\z/)
+      elsif number.match?(/\A[10]\d{9}\z/)
         formatted_number = number[0..3] + "." + number[4..6] + "." + number[7..9]
         Enterprise[formatted_number]
       elsif number.match?(/\A\d{9}\z/)
