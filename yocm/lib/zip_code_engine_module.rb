@@ -13,8 +13,8 @@ module Yocm
     def retrieve_zip_code_from(ocr_scan)
       matches = scan_for_target(ocr_scan)
 
-      if matches
-        valid_zip_code_from(matches) || "0000"
+      if matches && (match = valid_zip_code_from(matches))
+        match
       else
         "0000"
       end
@@ -28,12 +28,25 @@ module Yocm
       end
     end
 
-    def valid_zip_code_from(matches)
-      match = matches[1].scan(/[1-9]\d{3}/)[0]
-      if match.nil? || match.empty?
+    def valid_zip_code_from(captured_text)
+      matches = captured_text[1].scan(/[1-9]\d{3}/)
+
+      if matches.empty?
         nil
-      else
+      elsif matches.size == 1
+        match = matches.first
         valid_zip_code?(match) ? match : nil
+      else
+        correct_match = nil
+
+        matches.each do |match|
+          if valid_zip_code?(match)
+            correct_match = match
+            break
+          end
+        end
+
+        return correct_match
       end
     end
 
