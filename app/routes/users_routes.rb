@@ -110,9 +110,26 @@ module Yocm
             return view "user"
           end
 
+          if @user.follow_cbe_number?(new_enterprise.id)
+            flash.now["error"] = "Enterprise already followed by this user"
+            return view "user"
+          end
+
           if @user.add_enterprise(new_enterprise)
-            flash["success"] = "Enterprise has been added"
-            r.redirect "/users/#{@user.id}"
+            if r.headers["HX-Trigger"] == "follow_btn"
+              return partial("partials/unfollow_button", locals: {cbe_number: new_enterprise.id})
+            else
+              flash["success"] = "Enterprise has been added"
+              r.redirect "/users/#{@user.id}"
+            end
+          else
+            if r.headers["HX-Trigger"] == "follow_btn"
+              # Temporary error message
+              return render(inline: "<p>An error has occurred</p>")
+            else
+              flash.now["error"] = "Could not add enterprise"
+              return view "user"
+            end
           end
         end
 
@@ -125,11 +142,20 @@ module Yocm
           end
 
           if @user.remove_enterprise(old_enterprise)
-            flash["success"] = "Enterprise deleted"
-            r.redirect "/users/#{@user.id}"
+            if r.headers["HX-Trigger"] == "unfollow_btn"
+              return partial("partials/follow_button", locals: {cbe_number: old_enterprise.id})
+            else
+              flash["success"] = "Enterprise deleted"
+              r.redirect "/users/#{@user.id}"
+            end
           else
-            flash.now["error"] = "Could not delete enterprise"
-            return view "users"
+            if r.headers["HX-Trigger"] == "unfollow_btn"
+              # Temporary error message
+              return render(inline: "<p>An error has occurred</p>")
+            else
+              flash.now["error"] = "Could not delete enterprise"
+              return view "user"
+            end
           end
         end
 
@@ -160,27 +186,30 @@ module Yocm
             @pub_date = pub_date
 
             r.on "zipcodes" do
-              zip_code_ids = @user.zip_codes.sort_by(&:code).map(&:id)
+              zip_codes = @user.zip_codes.map(&:code)
 
-              @matching_codes_count = Publication.matching_zip_codes_count_for_day_and_codes(zip_code_ids, @pub_date)
-
-              @matching_codes = @matching_codes_count.map {_1[0] }
-              @total_matching_publications = Publication.daily_publications_matching_zip_codes_count_for(zip_code_ids, pub_date)
+              if zip_codes.empty?
+                @no_registered_zip_codes = true
+                return view("results/zip_code_results")
+              end
 
               r.is do
-                @current_zip_code = @matching_codes.first
-                @publications = Publication.daily_publications_matching_zip_codes_for(zip_code_ids.first, pub_date)
-
-                # Cannot use the enterprise partial : new entity are not present in the local DB
-                view "results/zip_code_results"
+                r.redirect "/users/#{@user.id}/results/#{@pub_date}/zipcodes/#{zip_codes.first}"
               end
 
               r.is String do |zip_code|
+                zip_code_ids = @user.zip_codes.sort_by(&:code).map(&:id)
+
+                @matching_codes_count = Publication.matching_zip_codes_count_for_day_and_codes(zip_code_ids, @pub_date)
+                @matching_codes = @matching_codes_count.map {_1[0] }
+                @total_matching_publications = Publication.daily_publications_matching_zip_codes_count_for(zip_code_ids, pub_date)
                 @current_zip_code = ZipCode.where(code: zip_code).first
+
                 unless @current_zip_code
                   response.status = 404
                   r.halt
                 end
+
                 @publications = Publication.daily_publications_matching_zip_codes_for(@current_zip_code.id, pub_date)
                 @enterprises = @publications.map(&:enterprise)
                 
