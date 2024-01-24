@@ -20,6 +20,8 @@ class App < Roda
   plugin :route_csrf
 
   # Routing
+  plugin :all_verbs
+  plugin :request_headers
   plugin :hash_routes
   Dir[File.join(opts[:root], "routes", "*.rb")].each { require_relative _1 }
 
@@ -59,7 +61,7 @@ class App < Roda
   route do |r|
     r.assets
     r.public
-    check_csrf!
+    #check_csrf!
     @active_user = User[r.session["active_user_id"]]
 
     r.hash_branches

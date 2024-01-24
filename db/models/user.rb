@@ -16,4 +16,8 @@ class User < Sequel::Model
     remove_all_zip_codes
     remove_all_enterprises
   end
+
+  def follow_cbe_number?(cbe)
+    enterprises.map(&:id).include?(cbe)
+  end
 end

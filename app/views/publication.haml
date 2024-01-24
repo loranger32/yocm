@@ -14,6 +14,11 @@
       %li.mb-2
         %button.btn.btn-warning.w-100{type: "button", "data-bs-toggle" => "collapse",
         "data-bs-target" => "#pub_form", "aria-expanded" => false, "aria-controls" => "pub_form"} Edit
+      %li.mb-2
+        - if @active_user&.follow_cbe_number?(@publication.cbe_number)
+          != partial("partials/unfollow_button", locals: {cbe_number: @publication.cbe_number})
+        - else
+          != partial("partials/follow_button", locals: {cbe_number: @publication.cbe_number})
       %li
         %a.btn.btn-info.w-100{href: back_to_list_link(@publication.pub_date, @referer)} Back to list
 

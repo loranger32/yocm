@@ -111,8 +111,20 @@ module Yocm
           end
 
           if @user.add_enterprise(new_enterprise)
-            flash["success"] = "Enterprise has been added"
-            r.redirect "/users/#{@user.id}"
+            if r.headers["HX-Trigger"] == "follow_btn"
+              return partial("partials/unfollow_button", locals: {cbe_number: new_enterprise.id})
+            else
+              flash["success"] = "Enterprise has been added"
+              r.redirect "/users/#{@user.id}"
+            end
+          else
+            if r.headers["HX-Trigger"] == "follow_btn"
+              # Temporary error message
+              return render(inline: "<p>An error has occurred</p>")
+            else
+              flash.now["error"] = "Could not add enterprise"
+              return view "user"
+            end
           end
         end
 
@@ -125,11 +137,20 @@ module Yocm
           end
 
           if @user.remove_enterprise(old_enterprise)
-            flash["success"] = "Enterprise deleted"
-            r.redirect "/users/#{@user.id}"
+            if r.headers["HX-Trigger"] == "unfollow_btn"
+              return partial("partials/follow_button", locals: {cbe_number: old_enterprise.id})
+            else
+              flash["success"] = "Enterprise deleted"
+              r.redirect "/users/#{@user.id}"
+            end
           else
-            flash.now["error"] = "Could not delete enterprise"
-            return view "users"
+            if r.headers["HX-Trigger"] == "unfollow_btn"
+              # Temporary error message
+              return render(inline: "<p>An error has occurred</p>")
+            else
+              flash.now["error"] = "Could not delete enterprise"
+              return view "user"
+            end
           end
         end
 

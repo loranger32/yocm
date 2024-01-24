@@ -15,3 +15,6 @@ a {
   list-style: none;
 }
 
+.followed {
+  background-color: #a0d8e1;
+}
