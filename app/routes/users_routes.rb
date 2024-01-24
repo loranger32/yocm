@@ -110,6 +110,11 @@ module Yocm
             return view "user"
           end
 
+          if @user.follow_cbe_number?(new_enterprise.id)
+            flash.now["error"] = "Enterprise already followed by this user"
+            return view "user"
+          end
+
           if @user.add_enterprise(new_enterprise)
             if r.headers["HX-Trigger"] == "follow_btn"
               return partial("partials/unfollow_button", locals: {cbe_number: new_enterprise.id})
