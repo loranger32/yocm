@@ -6,7 +6,7 @@ Your Own Company Monitor (Belgium)
 
 - Access the results with a GUI (with your browser from a local server).
 
-Current version : 0.11.0 - [see changes](/changelog)
+Current version : 0.11.0 - [see changes](https://github.com/loranger32/yocm/blob/main/CHANGELOG.md)
 
 ## 1. Introduction
 
