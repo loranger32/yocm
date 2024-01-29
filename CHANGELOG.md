@@ -1,3 +1,7 @@
+# MAIN
+
+- GUI - Allow user to follow entity not already in local DB via publication cbe_number **(run `rake db:migrate`)**
+
 # VERSION 0.11.0 - 24 January 2024
 
 - GUI - add a follow / unfollow feature (button) to various pages to more easily add an entity on the followed list

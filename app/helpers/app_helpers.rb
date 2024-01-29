@@ -6,6 +6,18 @@ module Yocm
 
     CbeTable = Struct.new("CbeTable", :name, :num_records)
 
+    def format_cbe_number(number)
+      formatted_number = case number
+      when /\A[10]\d{3}\.\d{3}\.\d{3}\z/ then number
+      when /\A[10]\d{9}\z/ then number[0..3] + "." + number[4..6] + "." + number[7..9]
+      when /\A\d{9}\z/ then "0" + number[0..2] + "." + number[3..5] + "." + number[6..8]
+      else
+        nil
+      end
+
+      formatted_number
+    end
+
     def link_ocr_text(publication)
       "#{publication.pub_date.to_s.delete("-")}/ocr/#{publication.file_name.sub(".pdf", ".txt")}"
     end
@@ -39,18 +51,13 @@ module Yocm
       result
     end
 
-
-    def retrieve_enterprise_from_cbe_number_input(number)
-      if number.match?(/\A[10]\d{3}\.\d{3}\.\d{3}\z/)
-        Enterprise[number]
-      elsif number.match?(/\A[10]\d{9}\z/)
-        formatted_number = number[0..3] + "." + number[4..6] + "." + number[7..9]
-        Enterprise[formatted_number]
-      elsif number.match?(/\A\d{9}\z/)
-        formatted_number = "0" + number[0..2] + "." + number[3..5] + "." + number[6..8]
-        Enterprise[formatted_number]
+    def retrieve_enterprise_or_publication(cbe_number)
+      if (enterprise = Enterprise[cbe_number])
+        return [enterprise, nil]
+      elsif (publication = Publication.where(cbe_number: cbe_number).first)
+        return [nil, publication]
       else
-        false
+        return [nil, nil]
       end
     end
 

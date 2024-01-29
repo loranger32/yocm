@@ -3,6 +3,7 @@ class User < Sequel::Model
 
   many_to_many :zip_codes
   many_to_many :enterprises
+  many_to_many :publications
 
   def validate
     super
@@ -18,6 +19,15 @@ class User < Sequel::Model
   end
 
   def follow_cbe_number?(cbe)
-    enterprises.map(&:id).include?(cbe)
+    enterprises.map(&:id).include?(cbe) ||
+      publications.map(&:cbe_number).include?(cbe)
+  end
+
+  def follow_no_cbe_number?
+    enterprises.empty? && publications.empty?
+  end
+
+  def follow_no_zips?
+    zip_codes.empty?
   end
 end

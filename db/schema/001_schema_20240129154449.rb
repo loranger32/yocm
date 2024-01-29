@@ -29,11 +29,9 @@ Sequel.migration do
     create_table(:cbe_metadata) do
       column :snapshot_date, "date", :null=>false
       column :extract_time_stamp, "timestamp without time zone", :null=>false
-      column :extract_type, "text", :null=>false
-      column :extract_number, "integer", :null=>false
+      column :extract_type, "TEXT", :null=>false
+      primary_key :extract_number, :keep_order=>true
       column :version, "character varying(8)", :null=>false
-      
-      primary_key [:extract_number]
     end
     
     create_table(:denominations) do
@@ -71,13 +69,13 @@ Sequel.migration do
     create_table(:juridical_forms) do
       column :code, "character(3)", :null=>false
       column :language, "character(2)", :null=>false
-      column :name, "text", :null=>false
+      column :name, "TEXT", :null=>false
       
       primary_key [:code, :language]
     end
     
     create_table(:schema_info) do
-      column :version, "integer", :default=>0, :null=>false
+      column :version, "INTEGER", :default=>0, :null=>false
     end
     
     create_table(:users) do
@@ -90,18 +88,18 @@ Sequel.migration do
     create_table(:zip_codes) do
       primary_key :id
       column :code, "character(4)", :null=>false
-      column :village_fr, "text"
-      column :city_fr, "text", :null=>false
-      column :province_fr, "text"
-      column :village_nl, "text"
-      column :city_nl, "text", :null=>false
-      column :province_nl, "text"
+      column :village_fr, "TEXT"
+      column :city_fr, "TEXT", :null=>false
+      column :province_fr, "TEXT"
+      column :village_nl, "TEXT"
+      column :city_nl, "TEXT", :null=>false
+      column :province_nl, "TEXT"
       
       index [:code]
     end
     
     create_table(:enterprises_users) do
-      foreign_key :enterprise_id, :enterprises, :type=>"character(12)", :null=>false, :key=>[:id], :on_delete=>:cascade
+      column :enterprise_id, "character(12)", :null=>false
       foreign_key :user_id, :users, :null=>false, :key=>[:id], :on_delete=>:cascade
       
       primary_key [:enterprise_id, :user_id]
@@ -111,7 +109,7 @@ Sequel.migration do
     
     create_table(:publications) do
       primary_key :id
-      column :file_name, "text", :null=>false
+      column :file_name, "TEXT", :null=>false
       column :cbe_number, "character(12)", :null=>false
       column :pub_date, "date", :null=>false
       foreign_key :zip_code_id, :zip_codes, :key=>[:id]
@@ -119,6 +117,7 @@ Sequel.migration do
       column :entity_name, "character varying(250)", :default=>"Unknown name", :null=>false
       column :known, "boolean", :null=>false
       
+      index [:cbe_number]
       index [:file_name], :name=>:publications_file_name_key, :unique=>true
     end
     
@@ -129,6 +128,13 @@ Sequel.migration do
       primary_key [:user_id, :zip_code_id]
       
       index [:zip_code_id, :user_id]
+    end
+    
+    create_table(:publications_users) do
+      foreign_key :publication_id, :publications, :null=>false, :key=>[:id], :on_delete=>:cascade
+      foreign_key :user_id, :users, :null=>false, :key=>[:id], :on_delete=>:cascade
+      
+      primary_key [:publication_id, :user_id]
     end
   end
 end

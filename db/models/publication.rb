@@ -76,6 +76,18 @@ class Publication < Sequel::Model
     ZipCode[zip_code_id].code
   end
 
+  def city
+    ZipCode[zip_code_id].city_fr.capitalize
+  end
+
+  def zip_and_city
+    if complete?
+      "#{zip_code} #{city}"
+    else
+      "Unknown zip code"
+    end
+  end
+
   def complete?
     zip_code_id != 1
   end

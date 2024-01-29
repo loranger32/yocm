@@ -1,2 +1,5 @@
-%button.btn.btn-warning#unfollow_btn{"hx-post" => "/users/#{@active_user.id}/delete_enterprise",
-  name: "cbe_number", value: cbe_number, "hx-swap" => "outerHTML"} Unfollow
+%button.btn.btn-warning#unfollow_btn{"hx-post" => "/users/#{@active_user.id}/delete_cbe",
+  name: "cbe_number", value: cbe_number, "hx-swap" => "outerHTML"}
+  Unfollow
+  - if defined?(error) && error
+    %p (#{error})

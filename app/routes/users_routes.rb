@@ -102,59 +102,128 @@ module Yocm
           end
         end
 
-        r.post "add_enterprise" do
-          cbe_number = r.params["cbe_number"].strip
+        r.post "add_cbe" do
+          cbe_number = format_cbe_number(r.params["cbe_number"])
 
-          unless (new_enterprise = retrieve_enterprise_from_cbe_number_input(cbe_number))
-            flash.now["error"] = "Invalid cbe number provided"
-            return view "user"
+          unless cbe_number
+            flash["error"] = "Malformed CBE number: #{r.params["cbe_number"]}"
+            r.redirect "/users/#{@user.id}"
           end
 
-          if @user.follow_cbe_number?(new_enterprise.id)
-            flash.now["error"] = "Enterprise already followed by this user"
-            return view "user"
+          enterprise, publication = retrieve_enterprise_or_publication(cbe_number)
+
+          if [enterprise, publication].all?(&:nil?)
+            flash["error"] = "No enterprise of publication matching: #{r.params["cbe_number"]}"
+            r.redirect "/users/#{@user.id}"
           end
 
-          if @user.add_enterprise(new_enterprise)
-            if r.headers["HX-Trigger"] == "follow_btn"
-              return partial("partials/unfollow_button", locals: {cbe_number: new_enterprise.id})
-            else
-              flash["success"] = "Enterprise has been added"
-              r.redirect "/users/#{@user.id}"
+          # AJAX action triggered by the "follow" button
+          if r.headers["HX-Trigger"] == "follow_btn"
+            if @user.follow_cbe_number?(cbe_number)
+              return partials("partials/follow_button", locals: {cbe_number: cbe_number, error: "Entity already followed by this user"})
             end
-          else
-            if r.headers["HX-Trigger"] == "follow_btn"
-              # Temporary error message
-              return render(inline: "<p>An error has occurred</p>")
+
+            # Entity exists in the local DB
+            if enterprise
+              if @user.add_enterprise(enterprise)
+                return partial("partials/unfollow_button", locals: {cbe_number: cbe_number})
+              else
+                return partial("partials/follow_button", locals: {cbe_number: cbe_number, error: "Could not add the enterprise"})
+              end
+            elsif publication
+              if @user.add_publication(publication)
+                return partial("partials/unfollow_button", locals: {cbe_number: cbe_number})
+              else
+                return partial("partials/follow_button", locals: {cbe_number: cbe_number, error: "Could not add the enterprise"})
+              end
             else
-              flash.now["error"] = "Could not add enterprise"
+              flash["error"] = "Something has gone wrong while trying to follow CBE Number : #{cbe_number}"
+              r.redirect "users/#{@user.id}"
+            end
+
+          # Regular request (from the user page)
+          else
+            if @user.follow_cbe_number?(cbe_number)
+              flash.now["error"] = "Entity already followed by this user"
               return view "user"
+            end
+
+            # Entity exists in the local DB
+            if enterprise
+              if @user.add_enterprise(enterprise)
+                flash["success"] = "'#{enterprise.name}'' successfully added"
+                r.redirect "/users/#{@user.id}"
+              else
+                flash.now["error"] = "Could not add '#{enterprise.name}'"
+                rerturn view "user"
+              end
+            elsif publication
+              if @user.add_publication(publication)
+                flash["success"] = "'#{publication.entity_name}' successfully added"
+                r.redirect "/users/#{@user.id}"
+              else
+                flash.now["error"] = "Could not add '#{enterprise.name}'"
+                rerturn view "user"
+              end
+            else
+              flash["error"] = "Something has gone wrong while trying to follow CBE Number : #{cbe_number}"
+              r.redirect "users/#{@user.id}"
             end
           end
         end
 
-        r.post "delete_enterprise" do
-          cbe_number = r.params["cbe_number"].strip
+        r.post "delete_cbe" do
+          cbe_number = format_cbe_number(r.params["cbe_number"])
 
-          unless (old_enterprise = retrieve_enterprise_from_cbe_number_input(cbe_number))
-            flash.now["error"] = "Invalid CBE number provided"
-            return view "user"
+          unless cbe_number
+            flash["error"] = "Malformed CBE number: #{r.params["cbe_number"]}"
+            r.redirect "/users/#{@user.id}"
           end
 
-          if @user.remove_enterprise(old_enterprise)
-            if r.headers["HX-Trigger"] == "unfollow_btn"
-              return partial("partials/follow_button", locals: {cbe_number: old_enterprise.id})
+          enterprise, publication = retrieve_enterprise_or_publication(cbe_number)
+
+          if [enterprise, publication].all?(&:nil?)
+            flash["error"] = "No enterprise of publication matching: #{r.params["cbe_number"]}"
+            r.redirect "/users/#{@user.id}"
+          end
+
+          if r.headers["HX-Trigger"] == "unfollow_btn"
+            if enterprise
+              if @user.remove_enterprise(enterprise)
+                return partial("partials/follow_button", locals: {cbe_number: cbe_number})
+              else
+                return partials("partials/unfollow_button", locals: {cbe_number: cbe_number, error: "could not remove CBE number"})
+              end
+            elsif publication
+              if @user.remove_publication(publication)
+                return partial("partials/follow_button", locals: {cbe_number: cbe_number})
+              else
+                return partials("partials/unfollow_button", locals: {cbe_number: cbe_number, error: "could not remove CBE number"})
+              end
             else
-              flash["success"] = "Enterprise deleted"
-              r.redirect "/users/#{@user.id}"
+              flash["error"] = "Something has gone wrong while trying to remove CBE number : #{cbe_number}"
+              r.redirect "users/#{@user.id}"
             end
           else
-            if r.headers["HX-Trigger"] == "unfollow_btn"
-              # Temporary error message
-              return render(inline: "<p>An error has occurred</p>")
+            if enterprise
+              if @user.remove_enterprise(enterprise)
+                flash["success"] = "'#{enterprise.name}' successfully removed"
+                r.redirect "/users/#{@user.id}"
+              else
+                flash.now["error"] = "'#{enterprise.name}' could not be removed"
+                return view "user"
+              end
+            elsif publication
+              if @user.remove_publication(publication)
+                flash["success"] = "'#{publication.entity_name}' successfully removed"
+                r.redirect "/users/#{@user.id}"
+              else
+                flash.now["error"] = "'#{@publication.entity_name}' could not be removed"
+                return view "user"
+              end
             else
-              flash.now["error"] = "Could not delete enterprise"
-              return view "user"
+              flash["error"] = "Something has gone wrong while trying to remove CBE Number : #{cbe_number}"
+              r.redirect "users/#{@user.id}"
             end
           end
         end
