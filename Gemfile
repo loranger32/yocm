@@ -13,7 +13,6 @@ gem "rtesseract", "~> 3.1", ">= 3.1.2"
 gem "rubyzip", "3.0.0.alpha", require: "zip"
 gem "sequel", "~> 5.65"
 gem 'sqlite3', '~> 1.7'
-gem "standard", "~> 1.22", ">= 1.22.1"
 
 group :engine do
   gem "mini_magick", "~> 4.12"
