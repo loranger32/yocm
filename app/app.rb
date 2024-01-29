@@ -85,6 +85,13 @@ class App < Roda
 
       view "about"
     end
+
+    r.is "changelog" do
+      changelog_text = File.read("CHANGELOG.md")
+      @html = Kramdown::Document.new(changelog_text).to_html
+
+      view "changelog"
+    end
   end
 end
 end
