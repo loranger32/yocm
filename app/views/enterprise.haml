@@ -3,12 +3,13 @@
     %h5.card-title
       = enterprise.name
       %span.fst-italic.fs-6.fw-normal (#{enterprise.juridical_form})
-    - if @active_user.follow_cbe_number?(enterprise.id)
-      %div
-        != partial("partials/unfollow_button", locals: {cbe_number: enterprise.id})
-    - else
-      %div
-        != partial("partials/follow_button", locals: {cbe_number: enterprise.id})
+    - if @active_user
+      - if @active_user.follow_cbe_number?(enterprise.id)
+        %div
+          != partial("partials/unfollow_button", locals: {cbe_number: enterprise.id})
+      - else
+        %div
+          != partial("partials/follow_button", locals: {cbe_number: enterprise.id})
     .card-body
       %p.fw-bold.fst-italic= enterprise.id
       - if enterprise.foreign_entity?
