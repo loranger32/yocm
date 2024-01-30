@@ -52,6 +52,7 @@ $prompt = TTY::Prompt.new
 $pastel = Pastel.new
 
 options = Yocm::Options.new.parse
+ENV["RUN_ENV"] = "development" if options.devdb?
 
 if options.check_setup?
   Yocm::SetupCheck.new.display_checks
@@ -66,7 +67,6 @@ if options.launch_gui?
   system("bundle exec rackup app/config.ru")
 end
 
-ENV["RUN_ENV"] = "development" if options.devdb?
 require_relative "../db/db"
 
 if options.data_operations?
