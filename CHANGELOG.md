@@ -18,7 +18,7 @@
 
 **BREAKING CHANGES**
 
-- ALL : replace postgresql with sqlite3
+- ALL : replace PostgreSQL with sqlite3
 
 **OTHER CHANGES**
 

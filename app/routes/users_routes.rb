@@ -138,7 +138,7 @@ module Yocm
               end
             else
               flash["error"] = "Something has gone wrong while trying to follow CBE Number : #{cbe_number}"
-              r.redirect "users/#{@user.id}"
+              r.redirect "/users/#{@user.id}"
             end
 
           # Regular request (from the user page)
@@ -167,7 +167,7 @@ module Yocm
               end
             else
               flash["error"] = "Something has gone wrong while trying to follow CBE Number : #{cbe_number}"
-              r.redirect "users/#{@user.id}"
+              r.redirect "/users/#{@user.id}"
             end
           end
         end
@@ -202,7 +202,7 @@ module Yocm
               end
             else
               flash["error"] = "Something has gone wrong while trying to remove CBE number : #{cbe_number}"
-              r.redirect "users/#{@user.id}"
+              r.redirect "/users/#{@user.id}"
             end
           else
             if enterprise
@@ -223,8 +223,19 @@ module Yocm
               end
             else
               flash["error"] = "Something has gone wrong while trying to remove CBE Number : #{cbe_number}"
-              r.redirect "users/#{@user.id}"
+              r.redirect "/users/#{@user.id}"
             end
+          end
+        end
+
+        # Merge CBE numbers from publications into enterprises
+        r.post "merge_cbe_numbers" do
+          if (merge_report = @user.merge_cbe_numbers_from_publications!)
+            flash["success"] = merge_report
+            r.redirect "/users/#{@user.id}"
+          else
+            flash.now["error"] = "No publications to merge"
+            view "user"
           end
         end
 
