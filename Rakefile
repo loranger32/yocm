@@ -32,6 +32,11 @@ task :random do
   puts "Random string of 64 bytes length: #{random_string}"
 end
 
+desc "Access an irb console with production DB connection initialized"
+task :c do
+  system("RAKE_CONSOLE_ENV=set_logging irb -r ./db/db.rb")
+end
+
 require "sequel/core"
 require "sequel"
 
@@ -62,11 +67,6 @@ def migrate_db(db_url, db_name, version)
     Sequel::Migrator.run(db, MIGRATIONS_PATH, target: version)
     puts "#{db_name} migrated"
   end
-end
-
-desc "Access an irb console with database connection initialized"
-task :c do
-  system("irb -r ./db/db.rb")
 end
 
 namespace :db do

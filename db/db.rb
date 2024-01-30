@@ -16,10 +16,11 @@ module Yocm
     DB = Sequel.sqlite(File.join(File.expand_path(__dir__), TEST_DB_NAME))
   elsif [ENV["RAKE_CONSOLE_ENV"], ENV["RUN_ENV"]].any? { _1 == "development" }
     DB = Sequel.sqlite(File.join(base_db_path, DEV_DB_NAME), setup_regexp_function: true)
-    DB.loggers << Logger.new($stdout)
   else
     DB = Sequel.sqlite(File.join(base_db_path, DB_NAME), setup_regexp_function: true)
   end
+
+  DB.loggers << Logger.new($stdout) if %w[development set_logging].include?(ENV["RAKE_CONSOLE_ENV"])
 end
 
 DB = Yocm::DB # Save some typing when in irb console
