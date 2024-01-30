@@ -13,11 +13,26 @@
           %a.nav-link{href: "/publications"} Publications
         %li.nav-item
           %a.nav-link{href: "/users/results"} Results
-        %li.nav-item
-          %a.nav-link{href: "/users"} Users
         %li.nav-item.dropdown
-          %a.nav-link.dropdown-toggle#navbarDropdown{href: "#", role: "button", "data-bs-toggle" => "dropdown", "aria-expanded" => false} Data
-          %ul.dropdown-menu{"aria-labelledby" => "navbarDropdown"}
+          %a.nav-link.dropdown-toggle#navbarDropdownUsers{href: "#", role: "button", "data-bs-toggle" => "dropdown", "aria-expanded" => false} Users
+          %ul.dropdown-menu{"aria-labelledby" => "navbarDropdownUsers"}
+            %li
+              %a.dropdown-item{href: "/users"} All Users
+            %li
+              %hr.dropdown-divider
+            - if @active_user
+              %li
+                %a.dropdown-item{href: "/users/#{@active_user.id}"}
+                  Current User
+                  %br
+                  %span.small (#{@active_user.email})
+            - else
+              %li
+                %a.dropdown-item.disabled{href: "#"}
+                  No Active User
+        %li.nav-item.dropdown
+          %a.nav-link.dropdown-toggle#navbarDropdownData{href: "#", role: "button", "data-bs-toggle" => "dropdown", "aria-expanded" => false} Data
+          %ul.dropdown-menu{"aria-labelledby" => "navbarDropdownData"}
             %li
               %a.dropdown-item{href: "/search", target: :blank} Search CBE data
             %li
