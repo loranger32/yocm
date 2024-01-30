@@ -1,6 +1,12 @@
 # MAIN
 
+- DB - Rakefile - Refactor DB logging + set logging when accessing console on production DB
+
+- GUI - Add feature to allow user to merge old followed publication with new enterprise records
+
 - GUI - Allow user to follow entity not already in local DB via publication cbe_number **(run `rake db:migrate`)**
+
+- various bug fixes and typos
 
 # VERSION 0.11.0 - 24 January 2024
 
@@ -18,7 +24,7 @@
 
 **BREAKING CHANGES**
 
-- ALL : replace postgresql with sqlite3
+- ALL : replace PostgreSQL with sqlite3
 
 **OTHER CHANGES**
 

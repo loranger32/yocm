@@ -1,4 +1,4 @@
-%button.btn.btn-danger#follow_btn{"hx-post" => "/users/#{@active_user.id}/add_cbe", name: "cbe_number", value: cbe_number, "hx-swap" => "outerHTML"}
+%button.btn.btn-danger#follow_btn{"hx-post" => "/users/#{@user&.id || @active_user.id}/add_cbe", name: "cbe_number", value: cbe_number, "hx-swap" => "outerHTML"}
   Follow
   - if defined?(error) && error
     %p (#{error})

@@ -5,7 +5,7 @@ module Yocm
     GERMAN_DETECTION = /si[lti]ze?s?/i
 
     FRENCH_PARSER = /[u\s+\-]si[éèeë]ge\s*:?\s*(.+)/im
-    DUTCH_PARSER = /[\s+\-]ze[ftl]e[lti!]\s*:?\s*(.+)/im
+    DUTCH_PARSER = /[\s+\-\.]ze[ftl]e[lti!]\s*:?\s*(.+)/im
     GERMAN_PARSER = /[\s+\-]si[lti]ze?s?\s*:?\s*(.+)/im
 
     module_function
