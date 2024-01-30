@@ -88,11 +88,19 @@ class ZipCodeEngineDutchTest < Minitest::Test
 
   def setup
     @method = :scan_nl
-    @targets = %w[Zetel zetel Zetet zetet Zetei zetei Zete! zete! Zefel zefel]
+    @targets = %w[Zetel zetel Zetet zetet Zetei zetei Zete! zete!
+                  Zefel zefel Zefet zefet Zefei zefei Zefe! zefe!
+                  Zelel zelel Zelet zelet Zelei zelei Zele! zele!]
     @fake_capture_group = "42 Lost Road,\n 4321 Nowhere"
     @fake_text_space = " : #{@fake_capture_group}"
     @fake_text_no_space = ": #{@fake_capture_group}"
     @fake_text_no_colon = " #{@fake_capture_group}"
+  end
+
+  def test_it_recognizes_simple_value_with_dot_before
+    @targets.each do |target|
+      assert_equal @fake_capture_group, scan(".#{target}#{@fake_text_space}")[1]
+    end
   end
 end
 
