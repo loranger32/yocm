@@ -230,8 +230,8 @@ module Yocm
 
         # Merge CBE numbers from publications into enterprises
         r.post "merge_cbe_numbers" do
-          if (merge_report = @user.merge_cbe_numbers_from_publications!)
-            flash["success"] = merge_report
+          if (report = @user.merge_cbe_numbers_from_publications!)
+            flash["success"] = format_merge_report(report)
             r.redirect "/users/#{@user.id}"
           else
             flash.now["error"] = "No publications to merge"

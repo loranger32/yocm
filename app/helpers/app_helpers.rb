@@ -18,6 +18,15 @@ module Yocm
       formatted_number
     end
 
+    def format_merge_report(report)
+      added = report[:enterprises_added]
+      dropped = report[:publications_dropped]
+      enterprises = added > 1 ? "enterprises" : "enterprise"
+      publications = dropped > 1 ? "publications" : "publication"
+
+      "#{added} #{enterprises} merged from #{dropped} #{publications}"
+    end
+
     def link_ocr_text(publication)
       "#{publication.pub_date.to_s.delete("-")}/ocr/#{publication.file_name.sub(".pdf", ".txt")}"
     end
