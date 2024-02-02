@@ -1,5 +1,7 @@
 # MAIN
 
+- GUI - Add feature to allow a user to clean (unfollow) all old publications of enterprises that have ceased to exist
+
 - DB - Rakefile - Refactor DB logging + set logging when accessing console on production DB
 
 - GUI - Add feature to allow user to merge old followed publication with new enterprise records

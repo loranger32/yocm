@@ -10,14 +10,29 @@
   %button.d-block.btn.btn-warning.me-3{type: "button", "data-bs-toggle" => "collapse", "data-bs-target" => "#collapseAddCBEForm",
     "aria-expanded" => false, "aria-controls" => "collapseAddCBEForm"} Add CBE Number
 
-  %form{action: "/users/#{@user.id}/merge_cbe_numbers", method: :post}
-    != csrf_tag("/users/#{@user.id}/merge_cbe_numbers")
-    - if @user.can_merge_cbe_numbers?
-      %button.btn.btn-warning.me-3{type: :submit}
-        Merge CBE Numbers
-        %span.badge.bg-danger= @user.overlapping_enterprise_records.size
-    - else
-      %button.btn.btn-warning.me-3.disabled{type: :submit} Can't Merge CBE Numbers
+  .dropdown.me-3
+    %button.btn.btn-warning.dropdown-toggle#dropdownEnterpriseManagment{type: :button,
+      "data-bs-toggle" => "dropdown", "aria-expanded" => false, class: can_or_cannot_manage_enterprise(@user)} Manage Enterprises
+
+    %ul.dropdown-menu{"aria-labelledby" => "dropdownEnterpriseManagment"}
+      %li
+        - if @user.can_merge_cbe_numbers?
+          %form{action: "/users/#{@user.id}/merge-cbe-numbers", method: :post}
+            != csrf_tag("/users/#{@user.id}/merge-cbe-numbers")
+            %button.dropdown-item{type: :submit}
+              Merge CBE Numbers
+              %span.badge.bg-danger= @user.overlapping_enterprise_records.size
+        - else
+          %button.dropdown-item.disabled No CBE Numbers to Merge
+      %li
+        - if @user.has_orphaned_publications?
+          %form{action: "/users/#{@user.id}/drop-orphaned-publications", method: :post}
+            != csrf_tag("/users/#{@user.id}/drop-orphaned-publications")
+            %button.dropdown-item{type: :submit}
+              Drop Orphaned Publications
+              %span.badge.bg-danger= @user.orphaned_publications.size
+        - else
+          %button.dropdown-item.disabled{href: "#"} No Orphaned Publications
   
   - if @user == @active_user
     %button.btn.btn-secondary.me-3{disabled: true} User is active

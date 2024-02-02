@@ -1,5 +1,10 @@
 module Yocm
   module ViewHelpers
+
+    def can_or_cannot_manage_enterprise(user)
+      user.has_enterprise_to_manage? ? "" : "disabled"
+    end
+
     def complete_list_class(referer, zip_errors_count)
       button_class = ""
       button_class += active_link(referer, "complete")

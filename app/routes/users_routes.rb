@@ -229,12 +229,23 @@ module Yocm
         end
 
         # Merge CBE numbers from publications into enterprises
-        r.post "merge_cbe_numbers" do
+        r.post "merge-cbe-numbers" do
           if (report = @user.merge_cbe_numbers_from_publications!)
             flash["success"] = format_merge_report(report)
             r.redirect "/users/#{@user.id}"
           else
             flash.now["error"] = "No publications to merge"
+            view "user"
+          end
+        end
+
+        # Unfollow orphaned publications - which is mostly due to the fact that the entity has ceased to exist
+        r.post "drop-orphaned-publications" do
+          if (num_dropped = @user.drop_orphaned_publications!)
+            flash["success"] = "#{num_dropped} orphaned #{num_dropped > 1 ? "publications" : "publication"} dropped"
+            r.redirect "/users/#{@user.id}"
+          else
+            flash.now["error"] = "No orphaned publication dropped"
             view "user"
           end
         end

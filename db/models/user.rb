@@ -17,6 +17,30 @@ class User < Sequel::Model
     !overlapping_enterprise_records.empty?
   end
 
+  def has_enterprise_to_manage?
+    can_merge_cbe_numbers? || has_orphaned_publications?
+  end
+
+  def has_orphaned_publications?
+    !orphaned_publications.empty?
+  end
+
+  # New publications that are not yet in the local DB have their cbe number that starts with 1.
+  def orphaned_publications
+    publications.select do |publication|
+      Enterprise[publication.cbe_number].nil? && publication.cbe_number.start_with?("0")
+    end
+  end
+
+  def drop_orphaned_publications!
+    return false unless has_orphaned_publications?
+
+    num_to_drop = orphaned_publications.size
+    orphaned_publications.each { remove_publication(_1) }
+
+    num_to_drop
+  end
+
   def merge_cbe_numbers_from_publications!
     return false unless can_merge_cbe_numbers?
 
