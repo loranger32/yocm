@@ -1,4 +1,4 @@
-# MAIN
+# VERSION 0.12.0 - 2 February 2024
 
 - GUI - Add feature to allow a user to clean (unfollow) all old publications of enterprises that have ceased to exist
 
