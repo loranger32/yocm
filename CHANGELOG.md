@@ -1,3 +1,7 @@
+# MAIN
+
+- Bump Sequel from 5.65 to 5.77
+
 # VERSION 0.12.0 - 2 February 2024
 
 - GUI - Add feature to allow a user to clean (unfollow) all old publications of enterprises that have ceased to exist
