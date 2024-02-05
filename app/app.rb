@@ -46,10 +46,10 @@ class App < Roda
   plugin :partials
   plugin :content_for
   plugin :assets,
-    css: %w[bootstrap_5_2_3.min.css style.css],
-    js: {bootstrap: "bootstrap_5_2_3.bundle.min.js", main: "main.js",
+    css: %w[bootstrap_5_3_2.min.css style.css],
+    js: {bootstrap: "bootstrap_5_3_2.bundle.min.js", main: "main.js",
          user: "user.js", edit_user: "edit_user.js",
-         bs_tooltips: "bs_tooltips.js", htmx: "htmx-1-9-6.min.js", delete_pubs: "delete_pubs.js"},
+         bs_tooltips: "bs_tooltips.js", htmx: "htmx-1-9-10.min.js", delete_pubs: "delete_pubs.js"},
     group_subdirs: false,
     timestamp_paths: true
   plugin :public
