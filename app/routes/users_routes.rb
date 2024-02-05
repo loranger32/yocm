@@ -188,24 +188,42 @@ module Yocm
           end
 
           if r.headers["HX-Trigger"] == "unfollow_btn"
-            if enterprise
+            if enterprise && publication
+              DB.transaction do
+                @user.remove_publication(publication)
+                @user.remove_enterprise(enterprise)
+              end
+              return partial("partials/follow_button", locals: {cbe_number: cbe_number})
+
+            elsif enterprise
               if @user.remove_enterprise(enterprise)
                 return partial("partials/follow_button", locals: {cbe_number: cbe_number})
               else
                 return partials("partials/unfollow_button", locals: {cbe_number: cbe_number, error: "could not remove CBE number"})
               end
+
             elsif publication
               if @user.remove_publication(publication)
                 return partial("partials/follow_button", locals: {cbe_number: cbe_number})
               else
                 return partials("partials/unfollow_button", locals: {cbe_number: cbe_number, error: "could not remove CBE number"})
               end
+
             else
               flash["error"] = "Something has gone wrong while trying to remove CBE number : #{cbe_number}"
               r.redirect "/users/#{@user.id}"
             end
+
           else
-            if enterprise
+            if enterprise && publication
+              DB.transaction do
+                @user.remove_publication(publication)
+                @user.remove_enterprise(enterprise)
+              end
+              flash["success"] = "'#{enterprise.name}' successfully removed"
+              r.redirect "/users/#{@user.id}"
+
+            elsif enterprise
               if @user.remove_enterprise(enterprise)
                 flash["success"] = "'#{enterprise.name}' successfully removed"
                 r.redirect "/users/#{@user.id}"
@@ -213,6 +231,7 @@ module Yocm
                 flash.now["error"] = "'#{enterprise.name}' could not be removed"
                 return view "user"
               end
+
             elsif publication
               if @user.remove_publication(publication)
                 flash["success"] = "'#{publication.entity_name}' successfully removed"
@@ -221,6 +240,7 @@ module Yocm
                 flash.now["error"] = "'#{@publication.entity_name}' could not be removed"
                 return view "user"
               end
+
             else
               flash["error"] = "Something has gone wrong while trying to remove CBE Number : #{cbe_number}"
               r.redirect "/users/#{@user.id}"
