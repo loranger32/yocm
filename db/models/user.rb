@@ -45,7 +45,7 @@ class User < Sequel::Model
     return false unless can_merge_cbe_numbers?
 
     pubs_to_delete = Publication.where(cbe_number: overlapping_enterprise_records.map(&:id)).all
-    enterprises_to_add = (overlapping_enterprise_records - enterprises).count
+    enterprises_to_add = (overlapping_enterprise_records - enterprises)
 
     report = {}
     report[:enterprises_added] = enterprises_to_add.count
