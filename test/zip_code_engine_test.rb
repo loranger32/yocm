@@ -74,7 +74,8 @@ class ZipCodeEngineFrenchTest < Minitest::Test
 
   def setup
     @method = :scan_fr
-    @targets = %w[Siège siège Siége siége Siege siege Siëge siëge uSiège usiège]
+    @targets = %w[Siège siège Siége siége Siege siege Siëge siëge uSiège usiège
+                  Slège slège Slége slége Slege slege Slëge slëge uSlège uslège]
     @fake_capture_group = "42 Lost Road,\n 4321 Nowhere"
     @fake_text_space = " : #{@fake_capture_group}"
     @fake_text_no_space = ": #{@fake_capture_group}"

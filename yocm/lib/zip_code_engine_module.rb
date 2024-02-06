@@ -1,10 +1,10 @@
 module Yocm
   module ZipCodeEngine
-    FRENCH_DETECTION = /si[éèeë]ge/i
+    FRENCH_DETECTION = /s[il][éèeë]ge/i
     DUTCH_DETECTION = /ze[ftl]e[lti!]/i
     GERMAN_DETECTION = /si[lti]ze?s?/i
 
-    FRENCH_PARSER = /[u\s+\-]si[éèeë]ge\s*:?\s*(.+)/im
+    FRENCH_PARSER = /[u\s+\-]s[il][éèeë]ge\s*:?\s*(.+)/im
     DUTCH_PARSER = /[\s+\-\.]ze[ftl]e[lti!]\s*:?\s*(.+)/im
     GERMAN_PARSER = /[\s+\-]si[lti]ze?s?\s*:?\s*(.+)/im
 
