@@ -203,7 +203,7 @@ module Yocm
               @current_regexp_opts = @regexp_used.to_s.scan(/\?([mix]+)[-:]/).flatten.first
               @current_regexp = @regexp_used.to_s.scan(/\(\?[mix]+[-mix]+:(.+)\)/).flatten.first
               @captured_text = @ocr_text.match(@regexp_used)
-              @matches = @captured_text && @captured_text[1].scan(/[1-9]\d{3}/)
+              @matches = @captured_text && @captured_text[1]&.scan(/[1-9]\d{3}/)
 
               view "debug"
             end
