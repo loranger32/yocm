@@ -1,5 +1,7 @@
 # MAIN
 
+- GEMFILE - Bump Nokogiri to 1.16.2 (from 1.15.5) to address [CVE-2024-25062](https://www.cve.org/CVERecord?id=CVE-2024-25062)
+
 - GUI - Fix various bugs
 
 - GUI - Update Bootstrap (5.3.2 from  5.2.3) and Htmx (1.9.10 from 1.9.6)
