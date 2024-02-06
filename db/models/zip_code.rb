@@ -1,4 +1,7 @@
 class ZipCode < Sequel::Model
+
+  plugin :static_cache unless ENV["RUN_ENV"] == "test"
+
   many_to_many :users
 
   def self.loaded?
