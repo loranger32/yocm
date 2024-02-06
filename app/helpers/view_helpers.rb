@@ -63,10 +63,6 @@ module Yocm
       Publication.count_zip_errors_from_date(date)
     end
 
-    def count_cbe_errors_from_date(date)
-      Publication.count_cbe_errors_from_date(date)
-    end
-
     def count_incomplete_from_date(date)
       Publication.count_incomplete_from_date(date)
     end
