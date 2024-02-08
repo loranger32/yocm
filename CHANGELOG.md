@@ -1,5 +1,7 @@
 # MAIN
 
+- GUI - Search page - Search by name - Fix bug when clicking on an enterprise number that refers to a natural person
+
 - GEMFILE - Bump Nokogiri to 1.16.2 (from 1.15.5) to address [CVE-2024-25062](https://www.cve.org/CVERecord?id=CVE-2024-25062)
 
 - GUI - Fix various bugs

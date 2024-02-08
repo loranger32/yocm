@@ -3,7 +3,7 @@
     %h5.card-title
       = enterprise.name
       %span.fst-italic.fs-6.fw-normal (#{enterprise.juridical_form})
-    - if @active_user
+    - if enterprise.company? && @active_user
       - if @active_user.follow_cbe_number?(enterprise.id)
         %div
           != partial("partials/unfollow_button", locals: {cbe_number: enterprise.id})
@@ -45,8 +45,11 @@
         %p= enterprise.country_fr_and_nl
 
     %a.btn.btn-primary.mb-3{href: link_cbe(enterprise.id), target: :blank} Link to CrossRoadBank
-    %a.btn.btn-primary.mb-3{href: link_mb(enterprise.id), target: :blank} Link to MB
-    %a.btn.btn-primary.mb-3{href: link_public_accounts(enterprise.id), target: :blank} Public accounts
+
+    - if enterprise.company?
+      %a.btn.btn-primary.mb-3{href: link_mb(enterprise.id), target: :blank} Link to MB
+      %a.btn.btn-primary.mb-3{href: link_public_accounts(enterprise.id), target: :blank} Public accounts
+
 
   .col-7
     - publications = @publications || enterprise.publications_of_the_day(@pub_date)

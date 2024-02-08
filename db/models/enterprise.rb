@@ -78,7 +78,17 @@ class Enterprise < Sequel::Model
     !branch.nil?
   end
 
-  def juridical_form(language=nil)
+  def juridical_form(language="FR")
+    if natural_person?
+      case language
+      when "FR" then return "Personne physique"
+      when "NL" then return "Natuurlijk persoon"
+      when "DE" then return "Natürliche Person"
+      else
+        return "Personne Physique"
+      end
+    end
+
     query = DB[:juridical_forms].where(code: juridical_form_id)
 
     case language
@@ -92,6 +102,10 @@ class Enterprise < Sequel::Model
 
   def name
     denominations.first.description
+  end
+
+  def natural_person?
+    type_of_enterprise == "1"
   end
 
   def publications

@@ -84,7 +84,10 @@ module Yocm
           if input.empty?
             render(inline: "")
           else
-            @denominations = Denomination.where(Sequel.lit("denomination LIKE ?", "%#{input}%")).limit(100).all
+            @denominations = Denomination.where(Sequel.lit("denomination LIKE ?", "%#{input}%"))
+                                         .where(type_of_denomination: "001")
+                                         .limit(100)
+                                         .all
             if @denominations.empty?
               render(inline: "<p>No Results</p>")
             else
