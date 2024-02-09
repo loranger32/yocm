@@ -43,7 +43,7 @@ module Yocm
             elsif !input.match?(/\A\d{1,4}\z/)
               render(inline: "Invalid input")
             else
-              @zipcodes = ZipCode.where(code: /\A#{input}/).all
+              @zipcodes = ZipCode.where(code: /^#{input}/i).all
               if @zipcodes.empty?
                 render(inline: "<p>No Results</p>")
               else
