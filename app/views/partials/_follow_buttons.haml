@@ -1,0 +1,14 @@
+- if @active_user&.follow_cbe_number?(cbe_number)
+  %div.mt-2.mb-2
+    %button.btn.btn-warning#unfollow_btn{"hx-post" => "/users/#{@user&.id || @active_user&.id}/delete_cbe",
+      name: "cbe_number", value: cbe_number, "hx-swap" => "outerHTML", class: full_width ? "w-100" : ""} Unfollow
+    - if defined?(error) && error
+      %p (#{error})
+
+- else
+  %div.mt-2.mb-2
+    %button.btn.btn-danger#follow_btn{"hx-post" => "/users/#{@user&.id || @active_user&.id}/add_cbe",
+      name: "cbe_number", value: cbe_number, "hx-swap" => "outerHTML", class: full_width ? "w-100" : ""} Follow
+    - if defined?(error) && error
+      %p (#{error})
+

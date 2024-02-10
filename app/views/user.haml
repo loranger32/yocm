@@ -109,7 +109,7 @@
                   %input{type: :hidden, name: 'cbe_number', value: enterprise.id}
                   %input.btn.btn-danger#delete_enterprise_button{type: :submit, value: "Delete"}
           - @user.publications.each do |publication|
-            %tr.text-center.bg-info
+            %tr.text-center.table-info
               %td= publication.cbe_number
               %td.fw-bold
                 %a{href: "/publications/#{publication.pub_date}/#{publication.file_name}"}= publication.entity_name

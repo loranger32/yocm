@@ -4,23 +4,18 @@
 
 .row.mb-5
   .col-2
-    %ul.mb-4.no_list_style
-      %li.mb-2
+    %mb-4
+      .mb-2
         %a.btn.btn-primary.w-100{href: link_cbe(@enterprise_id), target: :blank} CrossRoadBank
-      %li.mb-2
+      .mb-2
         %a.btn.btn-primary.w-100{href: link_mb(@enterprise_id), target: :blank} MB / BS
-      %li.mb-2
+      .mb-2
         %a.btn.btn-primary.w-100{href: link_public_accounts(@enterprise_id), target: :blank} Public Accounts
-      %li.mb-2
+      .mb-2
         %button.btn.btn-warning.w-100{type: "button", "data-bs-toggle" => "collapse",
         "data-bs-target" => "#pub_form", "aria-expanded" => false, "aria-controls" => "pub_form"} Edit
-      - if @active_user
-        %li.mb-2
-          - if @active_user.follow_cbe_number?(@publication.cbe_number)
-            != partial("partials/unfollow_button", locals: {cbe_number: @publication.cbe_number})
-          - else
-            != partial("partials/follow_button", locals: {cbe_number: @publication.cbe_number})
-      %li
+      != partial("partials/follow_buttons", locals: {cbe_number: @publication.cbe_number, full_width: true})
+      .mb-2
         %a.btn.btn-info.w-100{href: back_to_list_link(@publication.pub_date, @referer)} Back to list
 
   .col-4

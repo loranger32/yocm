@@ -1,16 +1,11 @@
 .row.mb-3
-  .col-4.offset-1.card{class: @active_user.follow_cbe_number?(publication.cbe_number) ? "followed" : ""}
+  .col-4.offset-1.card{class: @active_user&.follow_cbe_number?(publication.cbe_number) ? "followed" : ""}
     - if (enterprise = Enterprise[publication.cbe_number])
       %h5.card-title
         = enterprise.name
         %span.fst-italic.fs-6.fw-normal (#{enterprise.juridical_form})
 
-      - if @active_user.follow_cbe_number?(enterprise.id)
-        %div
-          != partial("partials/unfollow_button", locals: {cbe_number: enterprise.id})
-      - else
-        %div
-          != partial("partials/follow_button", locals: {cbe_number: enterprise.id})
+        != partial("partials/follow_buttons", locals: {cbe_number: enterprise.id, full_width: false})
       .card-body
         %p.fw-bold.fst-italic= enterprise.id
         - if enterprise.foreign_entity?
@@ -45,8 +40,12 @@
           %p= enterprise.zip_and_city
           %p= enterprise.country_fr_and_nl
     - else
-      %h5.card-title= publication.entity_name
+      %h5.card-title
+        = publication.entity_name
+        %br
+        != partial("partials/follow_buttons", locals: {cbe_number: publication.cbe_number, full_width: false})
       .card-body
+        %p.fw-bold.fst-italic= publication.cbe_number
         - if publication.probably_new
           %em Probably new entity, no info in local DB
         - else
