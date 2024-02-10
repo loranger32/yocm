@@ -5,32 +5,6 @@ module Yocm
         view "search"
       end
 
-      r.is "on-file-name" do
-        file_name = tp.nonempty_str!("file_name")
-
-        # There is a valid file name as query parameter
-        if file_name&.match?(/\A\d{8}.pdf\z/)
-          @publication = Publication.where(file_name: file_name).first
-          r.redirect "/publications/#{@publication.pub_date}/#{@publication.file_name}"
-
-        # There is an invalid file name or no file_name as query parameter
-        else
-          flash.now["error"] = "Not a valid file name"
-          view "search"
-        end
-      end
-
-      r.is "on_cbe_number" do
-        @cbe_number = tp.nonempty_str!("cbe_number")
-
-        if valid_cbe_number?(@cbe_number)
-          r.redirect "/enterprises/#{@cbe_number}"
-        else
-          flash.now["error"] = "Not a valid cbe number"
-          view "search"
-        end
-      end
-
       r.on "search-form" do
         r.is "file-name" do
           render "search/forms/file-name"
