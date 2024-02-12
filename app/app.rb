@@ -76,6 +76,13 @@ class App < Roda
       @last_pub_probably_new_count = Publication.count_probably_new_from_date(@last_pub_date)
       @last_pub_zip_code_missing = Publication.count_zip_errors_from_date(@last_pub_date)
 
+      if @active_user
+        zip_code_ids = @active_user.zip_codes.sort_by(&:code).map(&:id)
+        enterprises_ids = @active_user.enterprises.sort_by(&:id).map(&:id)
+        @last_pub_matching_zip_codes_count = Publication.daily_publications_matching_zip_codes_count_for(zip_code_ids, @last_pub_date)
+        @last_pub_matching_enterprises_count = Publication.daily_publications_matching_enterprises_count_for(enterprises_ids, @last_pub_date)
+      end
+
       view "home"
     end
 

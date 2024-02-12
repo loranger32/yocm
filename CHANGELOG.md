@@ -1,5 +1,7 @@
 # MAIN
 
+- GUI - Home Page - add links to results of the day
+
 - GUI - Improve styling and layout of the user and zip_code_results pages
 
 # VERSION 0.13.0 - 12 February 2024
