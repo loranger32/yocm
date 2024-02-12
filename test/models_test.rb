@@ -30,6 +30,11 @@ class ModelsTest < HookedTestClass
     @all_models.each { _1.all(&:delete) unless _1.empty? }
   end
 
+
+  ##########
+  # ADRESS #
+  ##########
+
   def test_address_has_required_accessors
     address = Address["0111.111.111"]
     refute_nil address
@@ -87,6 +92,11 @@ class ModelsTest < HookedTestClass
     assert_equal Establishment["2.111.000.001"], belgian_address.establishment
   end
 
+
+  ##########
+  # BRANCH #
+  ##########
+
   def test_branch_has_required_accessors
     branch = Branch["9.111.333.333"]
     assert_equal "9.111.333.333", branch.id
@@ -99,6 +109,11 @@ class ModelsTest < HookedTestClass
     assert_equal Address["9.111.333.333"], Branch["9.111.333.333"].address
   end
 
+
+  ################
+  # CBE METADATA #
+  ################
+
   def test_cbe_metadata_has_the_required_accessors
     cbe_metadata = CbeMetadata.where(extract_number: 3).first
     refute_nil cbe_metadata
@@ -107,6 +122,11 @@ class ModelsTest < HookedTestClass
     assert_equal "full", cbe_metadata.extract_type
     assert_equal "1.0.0", cbe_metadata.version
   end
+
+
+  ################
+  # DENOMINATION #
+  ################
 
   def test_denominations_has_required_accessors_and_associations
     denomination = Denomination.where(enterprise_id: "0222.222.222").first
@@ -119,6 +139,11 @@ class ModelsTest < HookedTestClass
     enterprise = Enterprise["0222.222.222"]
     assert_equal enterprise, denomination.enterprise
   end
+
+
+  ##############
+  # ENTERPRISE #
+  ##############
 
   def test_enterprise_has_required_accessors_and_associations
     enterprise = Enterprise[id: "0333.333.333"]
@@ -212,6 +237,11 @@ class ModelsTest < HookedTestClass
     refute enterprise.foreign_entity?
   end
 
+
+  #################
+  # ESTABLISHMENT #
+  #################
+
   def test_establishment_has_required_accessors_and_associations
     establishment = Establishment["2.666.666.661"]
     assert_equal "2.666.666.661", establishment.id
@@ -219,6 +249,11 @@ class ModelsTest < HookedTestClass
     assert_equal "0666.666.666", establishment.enterprise_id
     assert_equal Enterprise["0666.666.666"], establishment.enterprise
   end
+
+
+  ###############
+  # PUBLICATION #
+  ###############
 
   def test_publication_has_required_accessors
     # Needs to be extended
@@ -235,6 +270,11 @@ class ModelsTest < HookedTestClass
     assert_respond_to pub, :known
   end
 
+
+  ########
+  # USER #
+  ########
+
   def test_user_has_required_accessors_and_association
     user = User.where(email: "test_user@example.com").first
     refute_nil user
@@ -249,6 +289,34 @@ class ModelsTest < HookedTestClass
     refute_nil ZipCode[2]
     refute_nil enterprise
   end
+
+  def test_active_user
+    user = User.where(email: "test_user@example.com").first
+
+    refute_nil user
+    refute user.active?
+
+    user.make_active!
+
+    assert user.active?
+
+    User.create(email: "second_user@example.com")
+    second_user = User.where(email: "second_user@example.com").first
+
+    refute second_user.active?
+
+    second_user.make_active!
+
+    assert second_user.reload.active?
+    refute user.reload.active?
+
+    assert_equal "second_user@example.com", User.active.email
+  end
+
+
+  ###########
+  # ZIPCODE #
+  ###########
 
   def test_zip_code_has_required_accessors_and_association_and_class_method
     zip_code = ZipCode[2] # Brussels

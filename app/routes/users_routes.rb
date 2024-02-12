@@ -56,7 +56,7 @@ module Yocm
         end
 
         r. post "activate" do
-          r.session["active_user_id"] = @user.id
+          @user.make_active!
           flash[:success] = "User #{@user.email} is now the active user"
           r.redirect "/users/#{@user.id}"
         end

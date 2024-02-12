@@ -62,7 +62,7 @@ class App < Roda
     r.assets
     r.public
     #check_csrf!
-    @active_user = User[r.session["active_user_id"]]
+    @active_user = User.active
 
     r.hash_branches
 

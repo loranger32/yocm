@@ -5,6 +5,14 @@ class User < Sequel::Model
   many_to_many :enterprises
   many_to_many :publications
 
+  alias active? active
+
+  def self.active
+    active_user = where(active: true).all
+    raise StandardError, "More than one active user, check your DB" if active_user.size > 1
+    active_user.first
+  end
+
   def validate
     super
     validates_presence [:email]
@@ -40,6 +48,13 @@ class User < Sequel::Model
     orphaned_publications.each { remove_publication(_1) }
 
     num_to_drop
+  end
+
+  def make_active!
+    DB.transaction do
+      User.where(active: true).each { _1.update(active: false) } # There should only be one active user at a time, but just in case
+      update(active: true)
+    end
   end
 
   def merge_cbe_numbers_from_publications!

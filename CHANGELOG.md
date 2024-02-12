@@ -1,5 +1,7 @@
 # MAIN
 
+- GUI - Store active user in DB rather than in session **(run `rake db:migrate`)**
+
 - GUI - Combine follow/unfollow buttons into 1 partial
 
 - GUI - Search pages - Use regexp directly at the DB level
