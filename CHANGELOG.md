@@ -1,3 +1,7 @@
+# MAIN
+
+- GUI - Improve styling and layout of the zip_code_results page
+
 # VERSION 0.13.0 - 12 February 2024
 
 - GUI - Store active user in DB rather than in session **(run `rake db:migrate`)**
