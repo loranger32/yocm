@@ -289,7 +289,7 @@ module Yocm
                                 matching_zip_code_count: matching_zip_codes_count,
                                 matching_enterprises_count: matching_enterprises_count}
             end
-            view "results/results"
+            view "results/index"
           end
 
           r.on String do |pub_date|
