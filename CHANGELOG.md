@@ -1,12 +1,14 @@
 # MAIN
 
+- GUI - Combine follow/unfollow buttons into 1 partial
+
 - ALL - Use regexp with DB with setup_regexp_function: true
 
 - GUI - Search page - Search by name - Fix bug when clicking on an enterprise number that refers to a natural person
 
 - GEMFILE - Bump Nokogiri to 1.16.2 (from 1.15.5) to address [CVE-2024-25062](https://www.cve.org/CVERecord?id=CVE-2024-25062)
 
-- GUI - Fix various bugs
+- GUI - Fix various bugs + refactoring
 
 - GUI - Update Bootstrap (5.3.2 from  5.2.3) and Htmx (1.9.10 from 1.9.6)
 

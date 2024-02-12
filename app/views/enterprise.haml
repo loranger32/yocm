@@ -4,7 +4,7 @@
       = enterprise.name
       %span.fst-italic.fs-6.fw-normal (#{enterprise.juridical_form})
     - if enterprise.company?
-      != partial("partials/follow_buttons", locals: {cbe_number: enterprise.id, full_width: true})
+      != partial("partials/follow_buttons", locals: {cbe_number: enterprise.id, full_width: false})
     .card-body
       %p.fw-bold.fst-italic= enterprise.id
       - if enterprise.foreign_entity?

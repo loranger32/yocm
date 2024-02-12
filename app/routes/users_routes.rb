@@ -119,22 +119,24 @@ module Yocm
 
           # AJAX action triggered by the "follow" button
           if r.headers["HX-Trigger"] == "follow_btn"
+            full_width = tp.bool("full-width")
+
             if @user.follow_cbe_number?(cbe_number)
-              return partials("partials/follow_buttons", locals: {cbe_number: cbe_number, error: "Entity already followed by this user"})
+              return partials("partials/follow_buttons", locals: {cbe_number: cbe_number, full_width: full_width, error: "Entity already followed by this user"})
             end
 
             # Entity exists in the local DB
             if enterprise
               if @user.add_enterprise(enterprise)
-                return partial("partials/follow_buttons", locals: {cbe_number: cbe_number})
+                return partial("partials/follow_buttons", locals: {cbe_number: cbe_number, full_width: full_width})
               else
-                return partial("partials/follow_buttons", locals: {cbe_number: cbe_number, error: "Could not add the enterprise"})
+                return partial("partials/follow_buttons", locals: {cbe_number: cbe_number, full_width: full_width, error: "Could not add the enterprise"})
               end
             elsif publication
               if @user.add_publication(publication)
-                return partial("partials/follow_buttons", locals: {cbe_number: cbe_number})
+                return partial("partials/follow_buttons", locals: {cbe_number: cbe_number, full_width: full_width})
               else
-                return partial("partials/follow_buttons", locals: {cbe_number: cbe_number, error: "Could not add the enterprise"})
+                return partial("partials/follow_buttons", locals: {cbe_number: cbe_number, full_width: full_width, error: "Could not add the enterprise"})
               end
             else
               flash["error"] = "Something has gone wrong while trying to follow CBE Number : #{cbe_number}"
@@ -188,25 +190,27 @@ module Yocm
           end
 
           if r.headers["HX-Trigger"] == "unfollow_btn"
+            full_width = tp.bool("full-width")
+
             if enterprise && publication
               DB.transaction do
                 @user.remove_publication(publication)
                 @user.remove_enterprise(enterprise)
               end
-              return partial("partials/follow_buttons", locals: {cbe_number: cbe_number})
+              return partial("partials/follow_buttons", locals: {cbe_number: cbe_number, full_width: full_width})
 
             elsif enterprise
               if @user.remove_enterprise(enterprise)
-                return partial("partials/follow_buttons", locals: {cbe_number: cbe_number})
+                return partial("partials/follow_buttons", locals: {cbe_number: cbe_number, full_width: full_width})
               else
-                return partials("partials/follow_buttons", locals: {cbe_number: cbe_number, error: "could not remove CBE number"})
+                return partials("partials/follow_buttons", locals: {cbe_number: cbe_number, full_width: full_width, error: "could not remove CBE number"})
               end
 
             elsif publication
               if @user.remove_publication(publication)
-                return partial("partials/follow_buttons", locals: {cbe_number: cbe_number})
+                return partial("partials/follow_buttons", locals: {cbe_number: cbe_number, full_width: full_width})
               else
-                return partials("partials/follow_buttons", locals: {cbe_number: cbe_number, error: "could not remove CBE number"})
+                return partials("partials/follow_buttons", locals: {cbe_number: cbe_number, full_width: full_width, error: "could not remove CBE number"})
               end
 
             else
