@@ -2,7 +2,7 @@
 
 - GUI - Combine follow/unfollow buttons into 1 partial
 
-- ALL - Use regexp with DB with setup_regexp_function: true
+- GUI - Search pages - Use regexp directly at the DB level
 
 - GUI - Search page - Search by name - Fix bug when clicking on an enterprise number that refers to a natural person
 

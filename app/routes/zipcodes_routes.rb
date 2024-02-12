@@ -43,7 +43,7 @@ module Yocm
             elsif !input.match?(/\A\d{1,4}\z/)
               render(inline: "Invalid input")
             else
-              @zipcodes = ZipCode.where(code: /^#{input}/i).all
+              @zipcodes = ZipCode.where(Sequel.lit("code LIKE ?", "#{input}%")).all
               if @zipcodes.empty?
                 render(inline: "<p>No Results</p>")
               else
@@ -58,7 +58,7 @@ module Yocm
             if input.empty? || input.size <= 1
               render(inline: "")
             else
-              @zipcodes = ZipCode.where(city_fr: /#{input}/i).all
+              @zipcodes = ZipCode.where(Sequel.lit("LOWER(city_fr) LIKE LOWER(?)", "#{input}%")).all
               if @zipcodes.empty?
                 render(inline: "<p>No Results</p>")
               else
@@ -73,7 +73,7 @@ module Yocm
             if input.empty? || input.size <= 1
               render(inline: "")
             else
-              @zipcodes = ZipCode.where(village_fr: /#{input}/i).all
+              @zipcodes = ZipCode.where(Sequel.lit("LOWER(village_fr) LIKE LOWER(?)", "#{input}%")).all
               if @zipcodes.empty?
                 render(inline: "<p>No Results</p>")
               else

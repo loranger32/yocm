@@ -42,7 +42,10 @@ module Yocm
           elsif !input.match?(/\A\d{1,8}(\.pdf)?\z/)
             render(inline: "Invalid File Name")
           else
-            @publications = Publication.where(file_name: /^#{input}/i).limit(100).all
+            @publications = Publication.where(Sequel.lit("file_name LIKE ?", "#{input}%"))
+                                       .limit(100)
+                                       .all
+
             if @publications.empty?
               render(inline: "<p>No Results</p>")
             else
@@ -58,7 +61,7 @@ module Yocm
           if input.empty?
             render(inline: "")
           else
-            @denominations = Denomination.where(denomination: /#{input}/i)
+            @denominations = Denomination.where(Sequel.lit("LOWER(denomination) LIKE LOWER(?)", "%#{input}%"))
                                          .where(type_of_denomination: "001")
                                          .limit(100)
                                          .all
@@ -76,10 +79,12 @@ module Yocm
 
           if input.empty?
             render(inline: "")
-          elsif !input.match?(/\A[\d|.]{1,13}\z/)
+          elsif !input.match?(/\A[\d|\.]{1,13}\z/)
             render(inline: "Invalid CBE Number")
           else
-            @denominations = Denomination.where(enterprise_id: /#{partial_cbe_number(input)}/).limit(100).all
+            @denominations = Denomination.where(Sequel.lit("enterprise_id LIKE ?", "#{partial_cbe_number(input)}%"))
+                                         .limit(100)
+                                         .all
 
             if @denominations.empty?
               render(inline: "<p>No Results</p>")

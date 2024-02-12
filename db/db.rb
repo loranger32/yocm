@@ -13,11 +13,11 @@ module Yocm
   end
 
   if [ENV["RACK_ENV"], ENV["RAKE_CONSOLE_ENV"], ENV["RUN_ENV"]].any? { _1 == "test" }
-    DB = Sequel.sqlite(File.join(File.expand_path(__dir__), TEST_DB_NAME), setup_regexp_function: true)
+    DB = Sequel.sqlite(File.join(File.expand_path(__dir__), TEST_DB_NAME))
   elsif [ENV["RAKE_CONSOLE_ENV"], ENV["RUN_ENV"]].any? { _1 == "development" }
-    DB = Sequel.sqlite(File.join(base_db_path, DEV_DB_NAME), setup_regexp_function: true)
+    DB = Sequel.sqlite(File.join(base_db_path, DEV_DB_NAME))
   else
-    DB = Sequel.sqlite(File.join(base_db_path, DB_NAME), setup_regexp_function: true)
+    DB = Sequel.sqlite(File.join(base_db_path, DB_NAME))
   end
 
   DB.loggers << Logger.new($stdout) if %w[development set_logging].include?(ENV["RAKE_CONSOLE_ENV"])
