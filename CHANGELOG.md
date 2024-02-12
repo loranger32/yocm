@@ -12,7 +12,7 @@
 
 - GUI - Update Bootstrap (5.3.2 from  5.2.3) and Htmx (1.9.10 from 1.9.6)
 
-- Bump Sequel from 5.65 to 5.77
+- GEMFILE - Bump Sequel from 5.65 to 5.77
 
 # VERSION 0.12.0 - 2 February 2024
 

@@ -11,12 +11,12 @@ gem "pry-byebug", "~> 3.10", ">= 3.10.1"
 gem "rake", "~> 13.0", ">= 13.0.6"
 gem "rtesseract", "~> 3.1", ">= 3.1.2"
 gem "rubyzip", "3.0.0.alpha", require: "zip"
-gem "sequel", "~> 5.65"
+gem "sequel", "~> 5.77"
 gem 'sqlite3', '~> 1.7'
 
 group :engine do
   gem "mini_magick", "~> 4.12"
-  gem "nokogiri", "~> 1.14", ">= 1.14.1"
+  gem "nokogiri", "~> 1.16", ">= 1.16.2"
   gem "pastel", "~> 0.8.0"
   gem "tty-logger", "~> 0.6"
   gem "tty-prompt", "~> 0.23.1"
@@ -28,7 +28,7 @@ group :gui do
   gem "roda-enhanced_logger", "~> 0.5"
   gem "haml", "~> 5.2", ">= 5.2.2"
   gem "roda", "~> 3.64"
-  gem "puma", "~> 6.0", ">= 6.0.2"
+  gem "puma", "~> 6.4", ">= 6.4.2"
   gem "rerun", "~> 0.14"
 end
 
