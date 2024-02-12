@@ -81,6 +81,7 @@ Sequel.migration do
     create_table(:users) do
       primary_key :id
       column :email, "character varying(50)", :null=>false
+      column :active, "boolean", :default=>false
       
       index [:email], :name=>:users_email_key, :unique=>true
     end
