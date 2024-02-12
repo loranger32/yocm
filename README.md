@@ -439,7 +439,6 @@ The app is functional, but here are the things that should be done / fixed (in n
 - Engine: send email with results
 - Engine: add some guard clause when selecting multiple incompatible options for running the engine
 - Engine - GUI: notify user when a subscribed entity is deleted from the db
-- GUI : allow to add an entity to the follow list from the results page
 - GUI - i18n: French, Dutch and English (currently mix of English and French)
 - GUI: add tests
 - GUI:  allow update cbe data set from the gui

@@ -26,6 +26,7 @@ class User < Sequel::Model
   end
 
   # New publications that are not yet in the local DB have their cbe number that starts with 1.
+  # It's temporary though - need to find something more precise
   def orphaned_publications
     publications.select do |publication|
       Enterprise[publication.cbe_number].nil? && publication.cbe_number.start_with?("0")
