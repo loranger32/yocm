@@ -1,6 +1,4 @@
-- @tab_title = @user.email
-
-%h4.text-center.mb-5#user_email= @user.email
+- @tab_title = @page_title = @user.email
 
 .d-flex.justify-content-center.mb-3
   %a.d-block.btn.btn-primary.me-3{href: "/users/#{@user.id}/results"} Results
