@@ -64,7 +64,7 @@ Yocm::SetupCheck.new.check_setup!(:db)
 if options.launch_gui?
   ### Placing process in root directory, needed to properly access the public folder
   Dir.chdir("../")
-  system("bundle exec rackup app/config.ru")
+  system("RACK_ENV=production bundle exec rackup app/config.ru")
 end
 
 require_relative "../db/db"

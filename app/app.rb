@@ -11,6 +11,9 @@ class App < Roda
 
   ### PLUGINS
 
+  # Environment detection
+  plugin :environments
+
   # Logging
   plugin :enhanced_logger, filter: ->(path) { path.start_with?("/assets") }, trace_missed: true
 
@@ -45,11 +48,11 @@ class App < Roda
   plugin :content_for
   plugin :assets,
     css: %w[bootstrap_5_3_2.min.css style.css],
-    js: {bootstrap: "bootstrap_5_3_2.bundle.min.js", main: "main.js",
-         user: "user.js", edit_user: "edit_user.js",
+    js: {bootstrap: "bootstrap_5_3_2.bundle.min.js", main: "main.js", user: "user.js",
          bs_tooltips: "bs_tooltips.js", htmx: "htmx-1-9-10.min.js", delete_pubs: "delete_pubs.js"},
     group_subdirs: false,
     timestamp_paths: true
+  compile_assets if production?
   plugin :public
 
   # Request / response
@@ -57,7 +60,7 @@ class App < Roda
   alias_method :tp, :typecast_params
 
   route do |r|
-    r.assets
+    r.assets unless App.production?
     r.public
     @active_user = User.active
 

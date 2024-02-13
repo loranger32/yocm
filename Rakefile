@@ -17,12 +17,12 @@ task :default => :test
 
 desc "Start development server (rerun enabled)"
 task :ds do
-  exec "bundle exec rerun --ignore 'test/*' rackup app/config.ru"
+  exec "RACK_ENV=development bundle exec rerun --ignore 'test/*' rackup app/config.ru"
 end
 
 desc "Start classic server"
 task :s do
-  system "bundle exec rackup app/config.ru"
+  system "RACK_ENV=production bundle exec rackup app/config.ru"
 end
 
 desc "Generate random base64 string of 64 bytes length"
