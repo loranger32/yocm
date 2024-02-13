@@ -1,5 +1,7 @@
 # MAIN
 
+- GUI - Finish removing of csrf_tokens
+
 - GUI - Home Page - add links to results of the day
 
 - GUI - Improve styling and layout of the user and zip_code_results pages

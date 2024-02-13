@@ -48,7 +48,6 @@
           %form.mt-3.pt-3.border-top.collapse#pub_form{class: (!@publication.complete? ? "show" : ""), edit_mode: @modify_pub, action: publication_path, method: :post}
             %div
               .mb-3
-                != csrf_tag(publication_path)
                 .row.mb-3
                   .col-auto
                     %label.col-form-label{for: 'zip_code'} Zip Code

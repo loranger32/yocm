@@ -16,7 +16,6 @@
       %li
         - if @user.can_merge_cbe_numbers?
           %form{action: "/users/#{@user.id}/merge-cbe-numbers", method: :post}
-            != csrf_tag("/users/#{@user.id}/merge-cbe-numbers")
             %button.dropdown-item{type: :submit}
               Merge CBE Numbers
               %span.badge.bg-danger= @user.overlapping_enterprise_records.size
@@ -25,7 +24,6 @@
       %li
         - if @user.has_orphaned_publications?
           %form{action: "/users/#{@user.id}/drop-orphaned-publications", method: :post}
-            != csrf_tag("/users/#{@user.id}/drop-orphaned-publications")
             %button.dropdown-item{type: :submit}
               Drop Orphaned Publications
               %span.badge.bg-danger= @user.orphaned_publications.size
@@ -36,17 +34,14 @@
     %button.btn.btn-secondary.me-3{disabled: true} User is active
   - else 
     %form.me-3{action: "/users/#{@user.id}/activate", method: :post}
-      != csrf_tag("/users/#{@user.id}/activate")
       %input.btn.btn-success{type: :submit, value: 'Make active'}
 
   %form{action: "/users/#{@user.id}", method: :post}
-    != csrf_tag("/users/#{@user.id}")
     %input.btn.btn-danger#delete_user_button{type: :submit, value: 'Delete'}
 
 .row
   .col-10.offset-1.col-md-6.offset-md-3.col-xl-4.offset-xl-4.mb-3
     %form.collapse#collapseAddZipForm{action: "/users/#{@user.id}/add_zip", method: :post}
-      != csrf_tag("/users/#{@user.id}/add_zip")
       %input.form-control.mb-3{id: 'new_zip', name: 'new_zip', autofocus: true, maxlength: 4, placeholder: "Add zip code" }
       .text-center
         %input.btn.btn-primary{type: :submit, value: 'Register Zip'}
@@ -54,7 +49,6 @@
 .row
   .col-10.offset-1.col-md-6.offset-md-3.col-xl-4.offset-xl-4.mb-3
     %form.collapse#collapseAddCBEForm{action: "/users/#{@user.id}/add_cbe", method: :post}
-      != csrf_tag("/users/#{@user.id}/add_cbe")
       %input.form-control.mb-3{id: 'cbe_number', name: 'cbe_number', autofocus: true, maxlength: 12, placeholder: "Add CBE number" }
       .text-center
         %input.btn.btn-primary{type: :submit, value: 'Register CBE'}
@@ -79,7 +73,6 @@
             %td= all_villages_from(zip_code)
             %td
               %form{action: "/users/#{@user.id}/delete_zip", method: "post"}
-                != csrf_tag("/users/#{@user.id}/delete_zip")
                 %input{type: :hidden, name: 'zip_code', value: zip_code.code}
                 %input.btn.btn-danger#delete_zip_button{type: :submit, value: "Delete"}
   .col-6
@@ -103,7 +96,6 @@
               %td= enterprise.zip_and_city
               %td
                 %form{action: "/users/#{@user.id}/delete_cbe", method: :post}
-                  != csrf_tag("/users/#{@user.id}/delete_cbe")
                   %input{type: :hidden, name: 'cbe_number', value: enterprise.id}
                   %input.btn.btn-danger#delete_enterprise_button{type: :submit, value: "Delete"}
           - @user.publications.each do |publication|
@@ -114,7 +106,6 @@
               %td= publication.zip_and_city
               %td
                 %form{action: "/users/#{@user.id}/delete_cbe", method: :post}
-                  != csrf_tag("/users/#{@user.id}/delete_cbe")
                   %input{type: :hidden, name: "cbe_number", value: publication.cbe_number}
                   %input.btn.btn-danger.delete_enterprise_button{type: :submit, value: "Delete"}
 

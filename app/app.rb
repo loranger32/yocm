@@ -14,10 +14,8 @@ class App < Roda
   # Logging
   plugin :enhanced_logger, filter: ->(path) { path.start_with?("/assets") }, trace_missed: true
 
-  # Security - very, very basic
-
+  # Session
   plugin :sessions, key: "_Yocm.session", secret: ENV["SESSION_SECRET"]
-  plugin :route_csrf
 
   # Routing
   plugin :all_verbs
@@ -61,7 +59,6 @@ class App < Roda
   route do |r|
     r.assets
     r.public
-    #check_csrf!
     @active_user = User.active
 
     r.hash_branches

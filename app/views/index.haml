@@ -52,10 +52,8 @@
       .modal-footer
         %button.btn.btn-secondary{type: :button, "data-bs-dismiss" => "modal"} Close
         %form{action: "/publications/delete", method: :post}
-          != csrf_tag("/publications/delete")
           %button.btn.btn-danger#delete-one-day{type: :submit, name: "date"} This day only
         %form{action: "/publications/delete/many", method: :post}
-          != csrf_tag("/publications/delete/many")
           %button.btn.btn-danger#delete-many-days{type: :submit, name: "date"} All days before
 
 - content_for :js, assets([:js, :delete_pubs])

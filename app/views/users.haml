@@ -9,7 +9,6 @@
 .row.mb-5
   .col-10.offset-1.col-md-6.offset-md-3.col-xl-4.offset-xl-4.mb-3
     %form.collapse#collapseNewUserForm.mt-3{action: "/users", method: :post}
-      != csrf_tag("/users")
       %input.form-control.mb-3{id: 'email', name: 'email', type: :email, autofocus: true, size: "50",
           maxlength: 255, placeholder: "Add new user email address here"}
       .text-center
