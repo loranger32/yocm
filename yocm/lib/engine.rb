@@ -130,7 +130,7 @@ module Yocm
       report_data.total_new = pub_factory.probably_new_count
       report_data.total_files = pub_factory.publications.size
 
-      unless @options.skip_parsing?
+      unless @options.skip_zipcodes?
 
         unless @options.png_present?
           # Create PNG files to allow OCR parsing, and store them in the PNG directory
@@ -212,7 +212,7 @@ module Yocm
       end
 
 
-      if @options.skip_parsing?
+      if @options.skip_zipcodes?
         report_data.ocr_scans_saved = false
         report_data.pngs_saved = false
       end

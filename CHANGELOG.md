@@ -1,5 +1,7 @@
 # MAIN
 
+- ENGINE - Rename skip-parsing option to skip-zipcodes
+
 - GUI - Use local Ubuntu font files instead of fonts.google.apis.com
 
 - GUI - Use Roda:assets#compile_assets when launching GUI from the `yocm -g` and `rake s` commands

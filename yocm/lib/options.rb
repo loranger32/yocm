@@ -18,7 +18,7 @@ module Yocm
 
         opts.on("-m", "--manage-update", "Launch CBE data update manager")
 
-        opts.on("-s", "--skip-parsing", "Don't parse zip code (with -e or --engine)")
+        opts.on("-s", "--skip-zipcodes", "Don't parse zip code (with -e or --engine)")
 
         # --local-files and --png-present flags are mostly useful in development
         opts.on("--local-files", "Process local publication files, no download")
@@ -125,8 +125,8 @@ module Yocm
       png_present? || !@params[:"local-files"].nil?
     end
 
-    def skip_parsing?
-      !@params[:"skip-parsing"].nil?
+    def skip_zipcodes?
+      !@params[:"skip-zipcodes"].nil?
     end
 
     def data_operations?

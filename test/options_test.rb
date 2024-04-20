@@ -73,16 +73,16 @@ class OptionTest < Minitest::Test
     assert @options.manage_update?
   end
 
-  def test_skip_parsing_short
+  def test_skip_zipcodes_short
     ARGV << "-s"
     @options.parse
-    assert @options.skip_parsing?
+    assert @options.skip_zipcodes?
   end
 
-  def test_skip_parsing_long
-    ARGV << "--skip-parsing"
+  def test_skip_zipcodes_long
+    ARGV << "--skip-zipcodes"
     @options.parse
-    assert @options.skip_parsing?
+    assert @options.skip_zipcodes?
   end
 
 
@@ -116,7 +116,7 @@ class OptionTest < Minitest::Test
 
     assert_instance_of Hash, @options.list
     assert @options.list[:"debug-mode"]
-    assert @options.list[:"skip-parsing"]
+    assert @options.list[:"skip-zipcodes"]
     assert_equal 5, @options.list[:"days-back"]
   end
 
