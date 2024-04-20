@@ -16,6 +16,7 @@ Every Belgian company or association must publish some important acts, such as :
 - appointment / resignation of members of the board 
 - appointment / resignation of the auditor(s)
 - change of the registered office
+- modifications to bylaws
 - dissolution / liquidation
 - ...
 
@@ -25,7 +26,7 @@ There, you can download a zip file with all publications as PDF documents.
 
 **This project** allows you to download and parse the daily publications, store the results in a database and access them with a local front-end GUI in your browser.
 
-Publications can then be accessed and sorted by entity CBE number, zip code, file name and publication date.
+Publications can then be accessed and sorted by entity CBE number, zip code, file name and publication date (CBE number stands for Crossroads Bank of Enterprises number, an official and unique identifier for each company or association).
 
 The front-end application allows you to manage multiple users, each with their own criteria,
 and display the daily results according to these criteria.
@@ -35,6 +36,8 @@ For each publication, you get a direct link to the entity information's on the f
 - [CrossRoads Bank for Enterprises (CBE)](https://economie.fgov.be/en/themes/enterprises/crossroads-bank-enterprises) : useful general information's on the entity ;
 - [Moniteur Belge](https://www.ejustice.just.fgov.be/tsv_pub/index_f.htm): all publications related to the entity ;
 - [National Bank of Belgium](https://consult.cbso.nbb.be/): statutory accounts of the entity ;
+
+You'll need to download a local copy of the data publicly available from the website of the Crossroads Bank and upload it in a local database (see further).
 
 The code is [available on GitHub](https://github.com/loranger32/Yocm)
 
@@ -69,7 +72,7 @@ If you also want the zip code feature, the parsing requires _additional computin
 
 An XML file ships with the daily zip archive provided by the _Moniteur Belge_, and makes the link between a publication and the relevant entity, using the CBE number.
 
-The engine just links the CBE number to the publication in the DB, and its done. 
+The engine just links the CBE number to the publication in the local DB, and its done.
 
 Additionally, with the data publicly available from the CBE, that is stored in your local DB, you get additional info such as the address, denominations, branch.
 
@@ -92,8 +95,9 @@ Currently, there are between 0 to 10 errors per day to fix, usually less than 5.
 - a handwritten zip code
 - a badly scanned document
 - the zip code not being mentioned on the document
+- a misplaced zip code
 
-And there little that can be done to overcome these issues.
+And there is little that can be done to overcome these issues (except misplaced zip code - to be fixed)
 
 
 ## 4. Setup
@@ -110,7 +114,7 @@ In order to use these data, you'll also need to register and accept the terms of
 
 There is a free version, updated monthly, and a paid version, updated daily.
 
-The project has only been tested with the free monthly update version. You can download the updated data on the same website page, and the project ships with a small CLI utility to ease and automate the import and update of the data into the DB.
+The project has only been tested with the free monthly update version. You can manually download the updated data on the same website page and unzip it in the appropriate directory, or simply use the CLI utility to ease and automate the import and update of the data into the DB (see further).
 
 
 ### 4.2. Dependencies :
@@ -119,9 +123,9 @@ The project has only been tested with the free monthly update version. You can d
 
   - [Ruby 3+](https://www.ruby-lang.org)
 
-  - [SQLite3](https://www.sqlite.org/) + CLI tool
+  - [SQLite3](https://www.sqlite.org/) + CLI tool : SQLite will be automatically installed when you will install the required ruby libraries, but if you want the CLI utility, check your package manager.
 
-  - _optional_ : to easily switch from ruby version, and to avoid privilege issues when installing ruby libraries (gems),
+  - _optional but strongly recommended_ : to easily switch from ruby version, and to avoid privilege issues when installing ruby libraries (gems),
     you are encouraged to use a ruby version manager like [rbenv](https://github.com/rbenv/rbenv), [RVM](https://rvm.io/) or [asdf](https://github.com/asdf-vm/asdf)
 
 
@@ -140,33 +144,38 @@ The project has only been tested with the free monthly update version. You can d
   - [Ghostscript](https://www.ghostscript.com/index.html) for converting PDF to PNG via ImageMagick (usually included in linux distros)
 
 
-Run `ruby yocm/yocm.rb --check-setup` to check if all dependencies are met.
+Run `ruby yocm/yocm.rb --check-setup` to check if all dependencies are met (if SQLite is reported as missing, don't worry, it will be installed in a next step).
 
 
 ### 4.3. Configuration - ENV variables
 
-#### 4.3.1 Required
+- The following environments variables SHOULD be set :
 
-- The following environments variables MUST be set :
-
-  - `CBE_WEBSITE_LOGIN` and `CBE_WEBSITE_PASSWORD` which are your credentials for the [website of the CrossRoads Bank for Enterprises (CBE)](https://economie.fgov.be/en/themes/enterprises/crossroads-bank-enterprises/services-everyone/cbe-open-data). It will be used to ease the setup of the required CBE data into your local Database.
+  - `CBE_WEBSITE_LOGIN` and `CBE_WEBSITE_PASSWORD` which are your credentials for the [website of the CrossRoads Bank for Enterprises (CBE)](https://economie.fgov.be/en/themes/enterprises/crossroads-bank-enterprises/services-everyone/cbe-open-data). These will be used by the CLI utility to automate the download, unzipping and upload of the CBE data from the CBE website to your local database. Not required if you do not intend to use the CLI utility.
   
-  - **GUI** : `SESSION_SECRET` must be a string of at least 64 bytes and should be randomly generated.
+  - **GUI** : `SESSION_SECRET` must be a string of at least 64 bytes and should be randomly generated. _Only needed if you want to use the GUI._
   More info in the [Roda::RodaPlugins::Session documentation](http://roda.jeremyevans.net/rdoc/classes/Roda/RodaPlugins/Sessions.html). It is used by the GUI only.
   You can generate such a string by issuing the following command in a terminal at the root of the project : `rake random`
 
+  - `BASE_DB_PATH` an absolute path to an existing directory (without the trailing slash) where you want to store your production and development DB. If the variable is not set, these 2 DB's are created inside the `db` directory (and are ignored by git due to the .gitignore file).
 
-#### 4.3.2 Optional
-
-  - `BASE_DB_PATH` an absolute path to an existing directory where you want to store your production and development DB. If the variable is not set, these 2 DB's are created inside the `db` directory (and are ignored by git due to the .gitignore file).
-
-  - `DB_BACKUP_DIR` an absolute path to your backup directory (without the trailing slash). Used by the `rake db:backup` command.
+  - `DB_BACKUP_DIR` an absolute path to your backup directory (without the trailing slash). Used by the `rake db:backup` command. This command will not run if this variable is not set.
 
 
 #### 4.3.3 Use a `.env` file
 
 You can set the environment variables as you see fit, but there is a simple way : just create a
 file called `.env` (mind the dot) at the root of the project, with the required environment variables in plain text. Thanks to the [`dotenv` ruby gem](https://github.com/bkeepers/dotenv), they will automatically be picked up when launching any of the scripts.
+
+Example of `.env` file
+
+```text
+BASE_DB_PATH="/home/my_user_name/my_storage_directory/yocm_dbs
+DB_BACKUP_DIR="/home/my_user_name/database_backups/yocm"
+SESSION_SECRET="a_random_string_of_64_bytes_length_run_rake_random_to_create_one"
+CBE_WEBSITE_LOGIN="my_cbe_user_name"
+CBE_WEBSITE_PASSWORD="my_cbe_password"
+```
 
 _This file will be ignored by git due to the .gitignore file. Don't change this setting !_
 
@@ -407,7 +416,7 @@ Simply issue a `git pull` command from the root of the project.
 
 Changes to the GUI and the engine shouldn't introduce breaking change, but that can happen, so you are strongly advised to review the changes before updating the project.
 
-But **changes to the database schema could break something**, or at a minimum require you to issue a `rake db:all:migrate` so you absolutely need to review the `changelog.md` file before using the updated version.
+But **changes to the database schema could break something**, or at a minimum require you to issue a `rake db:all:migrate` command so you absolutely need to review the `CHANGELOG.md` file before using the updated version.
 
 Please also note that some changes in the database schema are required due to changes in the data schema of the CBE itself. Sometimes, it's impossible to update the data from the CBE without applying the changes first.
 
@@ -417,9 +426,9 @@ Don't forget to backup your local DB before any of these operations :
  me@my_computer in /path/to/yocm/dir $ rake db:backup
  ~~~
 
-It's a wrapper for the `pg_dump -F p your_database_name > your_backup_file`
+This command assumes an environment variable `DB_BACKUP_DIR` to be set with an absolute path to your backup directory (without the trailing slash).
 
-This command assumes an environment variable `DB_BACKUP_DIR` to be set with an absolute path to your backup directory (without the trailing slash). 
+It's a convenience wrapper of the `cp path/to/production/db DB_BACKUP_DIR/yocm_db_timestamp` command.
 
 Then you can run the following command to update the DB schema : `$ rake db:all:migrate`
 
@@ -428,20 +437,19 @@ Then you can run the following command to update the DB schema : `$ rake db:all:
 
 Due to database design, it is currently impossible to delete zip codes from the zip codes table if you have a user with registered zip codes. It is more a feature than a bug : it prevents you from accidentally deleting zip codes for which users have a subscription.
 
-Workaround 2: remove all zip codes subscriptions from all users, delete and upload zip codes again, then recreate subscriptions.
 Workaround 1: delete all users with registered zip codes and recreate them.
+Workaround 2: remove all zip codes subscriptions from all users, delete and upload zip codes again, then recreate subscriptions.
 
 
-# Roadmap
+# Roadmap - Ideas
 
 The app is functional, but here are the things that should be done / fixed (in no particular order) :
 
-- Engine: send email with results
 - Engine: add some guard clause when selecting multiple incompatible options for running the engine
 - Engine - GUI: notify user when a subscribed entity is deleted from the db
 - GUI - i18n: French, Dutch and English (currently mix of English and French)
 - GUI: add tests
-- GUI:  allow update cbe data set from the gui
+- GUI: allow update cbe data set from the gui
 - Doc: document the engine processing and the various data directories
 
 # Contribution
