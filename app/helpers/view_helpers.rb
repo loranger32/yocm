@@ -72,8 +72,10 @@ module Yocm
     end
 
     def link_mb(cbe_number)
-      "https://www.ejustice.just.fgov.be/cgi_tsv/tsv_rech.pl?" \
-        "language=fr&btw=#{cbe_number.delete(".")}&liste=Liste"
+      vat_number = vat_number_from(cbe_number)
+
+      "https://www.ejustice.just.fgov.be/cgi_tsv/list.pl?language=fr&btw=#{vat_number}" \
+        "&page=1&view_numac=#{vat_number}#SUM"
     end
 
     def link_public_accounts(cbe_number)
@@ -144,6 +146,16 @@ module Yocm
     def truncate(str, target_length)
       return str if str.length <= target_length
       str[0..target_length - 3] + "..."
+    end
+
+    def vat_number_from(cbe_number)
+      vat_number = cbe_number.delete(".")
+
+      if vat_number[0] == "0"
+        vat_number[1..]
+      else
+        vat_number
+      end
     end
 
     def zip_display(zip_code)
