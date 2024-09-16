@@ -1,5 +1,4 @@
 require "rake/testtask"
-require "standard/rake"
 require "dotenv"
 Dotenv.load
 
