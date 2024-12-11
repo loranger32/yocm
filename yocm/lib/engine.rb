@@ -14,7 +14,7 @@ module Yocm
     PATH_TO[:app_public_folder] = File.expand_path(File.join("..", "..", "app", "public"), __dir__)
     PATH_TO.freeze
 
-    ReportData = Struct.new(:start_time, :engine_version, :options, :target_date, :url,
+    ReportData = Struct.new(:start_time, :engine_version, :options, :user, :no_user_option, :target_date, :url,
                             :total_known, :total_unknown, :zip_code_errors, :total_new, :total_files,
                             :publications_saved, :ocr_scans_saved, :pngs_saved, :db_storage, :end_time, :elapsed_time)
 
@@ -38,6 +38,11 @@ module Yocm
       begin
 
       report_data = ReportData.new
+
+      user_info = UserManager.new(@options.user).user_info!
+      report_data.user = user_info.user
+      report_data.no_user_option = user_info.no_user_option
+
       report_data.start_time = Time.now
       report_data.engine_version = VERSION
       report_data.options = @options.list
@@ -296,6 +301,7 @@ module Yocm
         raise Error, err_msg
       end
     end
+
     def config_logger
       current_date = Time.now.strftime("%Y%m%d")
       log_file_path = File.join(PATH_TO[:logs], "log_#{current_date}.log")

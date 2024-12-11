@@ -20,6 +20,9 @@ module Yocm
 
         opts.on("-s", "--skip-zipcodes", "Don't parse zip code (with -e or --engine)")
 
+        user_opt_msg = "Select particular user (with its id) for the report - or no user at all. Defaults to active user if there is one, no user otherwise"
+        opts.on("-u", "--[no-]user=USER_ID", Integer, user_opt_msg)
+
         # --local-files and --png-present flags are mostly useful in development
         opts.on("--local-files", "Process local publication files, no download")
 
@@ -127,6 +130,14 @@ module Yocm
 
     def skip_zipcodes?
       !@params[:"skip-zipcodes"].nil?
+    end
+
+    def user
+      @params[:user]
+    end
+
+    def user?
+      !!@params[:user]
     end
 
     def data_operations?

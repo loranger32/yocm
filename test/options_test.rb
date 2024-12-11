@@ -85,6 +85,24 @@ class OptionTest < Minitest::Test
     assert @options.skip_zipcodes?
   end
 
+  def test_user_short
+    ARGV << "-u2"
+    @options.parse
+    assert_equal 2, @options.user
+  end
+
+  def test_user_long
+    ARGV << "--user=2"
+    @options.parse
+    assert_equal 2, @options.user
+  end
+
+  def test_no_user
+    ARGV << "--no-user"
+    @options.parse
+    refute @options.user
+  end
+
 
   ##################################
   # Options with long version only #
