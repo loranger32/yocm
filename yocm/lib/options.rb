@@ -8,9 +8,9 @@ module Yocm
       OptionParser.new do |opts|
         opts.banner = "Usage: ./yocm/yocm.rb [options]"
 
-        opts.on("-bDAYSBACK", "--days-back=DAYSBACK", Integer, "Select number of days before (0-30)(with -e or --engine)")
+        opts.on("-bDAYSBACK", "--days-back=DAYSBACK", Integer, "Select number of days before (0-30)(with -e or --engine). Defaults to current day")
 
-        opts.on("-d", "--debug-mode", "Set logger to debug level (with -e or --engine)")
+        opts.on("-d", "--debug-mode", "Set logger to debug level (with -e or --engine). Defaults to info level")
 
         opts.on("-e", "--engine", "Run parsing engine")
 
@@ -18,7 +18,7 @@ module Yocm
 
         opts.on("-m", "--manage-update", "Launch CBE data update manager")
 
-        opts.on("-s", "--skip-zipcodes", "Don't parse zip code (with -e or --engine)")
+        opts.on("-s", "--skip-zipcodes", "Don't parse zip code (with -e or --engine). Defaults = parse zip codes")
 
         user_opt_msg = "Select particular user (with its id) for the report - or no user at all. Defaults to active user if there is one, no user otherwise"
         opts.on("-u", "--[no-]user=USER_ID", Integer, user_opt_msg)
