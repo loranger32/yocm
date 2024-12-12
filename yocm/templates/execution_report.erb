@@ -84,5 +84,16 @@
         <td><%= @data.db_storage %></td>
       </tr>
     </table>
+    <% if @data.no_user_option %>
+      <h2>"No user" option provided - no user report generated</h2>
+    <% elsif !@data.user.nil? && @data.user.active %>
+      <h2>No specific user selected, reports generated for the active user: <%= @data.user.email %> (id: <%= @data.user.id %>)</h2>
+    <% elsif !@data.user.nil? && !@data.user.active %>
+      <h2>Specific user selected - report generated for user: <%= @data.user.email %> (id: <%= @data.user.id %>)</h2>
+    <% elsif @data.user.nil? %>
+      <h2>No specific user selected and no active user - no user report generated</h2>
+    <% else %>
+      <h2>Could not figure out for which user a report must be generated</h2>
+    <% end %>
   </body>
 </html>
