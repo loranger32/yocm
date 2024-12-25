@@ -63,4 +63,11 @@ class UserManagerUserInfoTest < HookedTestClass
       assert_equal false, info.no_user_option
     end
   end
+
+  def test_user_manager_predicate_user_selected_class_method
+    user = User[1]
+    user_info = Yocm::UserManager.new(1).user_info!
+
+    assert Yocm::UserManager.user_selected?(user_info)
+  end
 end

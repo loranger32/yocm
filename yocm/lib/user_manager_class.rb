@@ -2,6 +2,12 @@ module Yocm
   class UserManager
     class Error < StandardError; end
 
+    class << self
+      def user_selected?(user_info)
+        !user_info.user.nil?
+      end
+    end
+
     UserInfo = Data.define(:user, :no_user_option)
 
     def initialize(user_id)
