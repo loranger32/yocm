@@ -18,7 +18,7 @@ class User < Sequel::Model
     validates_presence [:email]
     validates_unique :email
     # regexp found on email regex.com
-    validates_format /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i, :email, message: "is not a valid email"
+    validates_format (/\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i), :email, message: "is not a valid email"
   end
 
   def can_merge_cbe_numbers?

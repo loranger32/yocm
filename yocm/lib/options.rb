@@ -146,4 +146,3 @@ module Yocm
     end
   end
 end
-
