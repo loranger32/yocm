@@ -1,5 +1,7 @@
 # MAIN
 
+- ENGINE - Generate a html report with user's results if a user is provided (or an active user is set)
+
 - ENGINE - Rename skip-parsing option to skip-zipcodes
 
 - GUI - Use local Ubuntu font files instead of fonts.google.apis.com
