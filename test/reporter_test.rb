@@ -4,6 +4,7 @@ require "fileutils"
 require_relative "test_helpers"
 require_relative "../yocm/lib/engine" # for access to the ReportData struct
 require_relative "../yocm/lib/reporter_class"
+require_relative "../yocm/lib/results_manager_class"
 
 
 
@@ -15,7 +16,8 @@ class ReportTest < Minitest::Test
   # Must be kept in sync with the struct defined in engine.rb
   # ReportData = Struct.new(:start_time, :engine_version, :options, :user, :no_user_option, :target_date,
   #    :url, :total_known, :total_unknown, :zip_code_errors, :total_new, :total_files,
-  #   :publications_saved, :ocr_scans_saved, :pngs_saved, :db_storage, :end_time, :elapsed_time)
+  #   :publications_saved, :ocr_scans_saved, :pngs_saved, :db_storage, :end_time, :elapsed_time,
+  #   :zip_code_results, :enterprise_results)
 
   # Allow setting if id field on User instances
   User.strict_param_setting = false
@@ -38,7 +40,9 @@ class ReportTest < Minitest::Test
     pngs_saved: "PNG successfully saved",
     db_storage: false,
     end_time: Time.new(2022, 1, 27, 0, 1, 30),
-    elapsed_time: 90.0)
+    elapsed_time: 90.0,
+    zip_code_results: Yocm::ResultsManager::ZipCodeResults.new(match: false, matching: nil),
+    enterprise_results: Yocm::ResultsManager::EnterpriseResults.new(match: false, matching: nil))
 
   # hack to set an user id without touching DB
   DEFAULT_DATA.user.id = 1

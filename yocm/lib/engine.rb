@@ -15,7 +15,8 @@ module Yocm
 
     ReportData = Struct.new(:start_time, :engine_version, :options, :user, :no_user_option, :target_date, :url,
                             :total_known, :total_unknown, :zip_code_errors, :total_new, :total_files,
-                            :publications_saved, :ocr_scans_saved, :pngs_saved, :db_storage, :end_time, :elapsed_time)
+                            :publications_saved, :ocr_scans_saved, :pngs_saved, :db_storage, :end_time, :elapsed_time,
+                            :zip_code_results, :enterprise_results)
 
     ParserResult = Struct.new(:file_name, :zip_code)
     OCRScans = Struct.new(:file_name, :scan)
@@ -262,6 +263,15 @@ module Yocm
 
         $log.success("Publications stored in the database")
         report_data.db_storage = true
+
+
+        ### User's results
+
+        if UserManager.user_selected?(user_info)
+          results_manager = ResultsManager.new(user_info.user, date_object.date_instance)
+          report_data.zip_code_results = results_manager.zip_code_results
+          report_data.enterprise_results = results_manager.enterprise_results
+        end
 
         ### ReportMaker
 

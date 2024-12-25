@@ -86,12 +86,39 @@
     </table>
     <% if @data.no_user_option %>
       <h2>"No user" option provided - no user report generated</h2>
-    <% elsif !@data.user.nil? && @data.user.active %>
-      <h2>No specific user selected, reports generated for the active user: <%= @data.user.email %> (id: <%= @data.user.id %>)</h2>
-    <% elsif !@data.user.nil? && !@data.user.active %>
-      <h2>Specific user selected - report generated for user: <%= @data.user.email %> (id: <%= @data.user.id %>)</h2>
     <% elsif @data.user.nil? %>
       <h2>No specific user selected and no active user - no user report generated</h2>
+    <% elsif !@data.user.nil? && @data.user.active %>
+      <h2>No specific user selected, reports generated for the active user: <%= @data.user.email %> (id: <%= @data.user.id %>)</h2>
+      <h3>Matching Zip Codes</h3>
+      <% if @data.zip_code_results.match %>
+        <table>
+          <% @data.zip_code_results.matching.each do |zipcode| %>
+            <tr>
+              <td><%= zipcode.code %></td>
+              <td><%= zipcode.num_matches %></td>
+            </tr>
+          <% end %>
+        </table>
+      <% else %>
+        <p>//////</p>
+      <% end %>
+
+      <h3>Matching Enterprises</h3>
+      <% if @data.enterprise_results.match %>
+        <table>
+          <% @data.enterprise_results.matching.each do |enterprise| %>
+            <tr>
+              <td><%= enterprise.cbe_number %></td>
+              <td><%= enterprise.denomination %></td>
+            </tr>
+          <% end %>
+        </table>
+      <% else %>
+        <p>//////</p>
+      <% end %>
+    <% elsif !@data.user.nil? && !@data.user.active %>
+      <h2>Specific user selected - report generated for user: <%= @data.user.email %> (id: <%= @data.user.id %>)</h2>
     <% else %>
       <h2>Could not figure out for which user a report must be generated</h2>
     <% end %>
