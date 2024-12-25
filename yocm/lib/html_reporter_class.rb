@@ -1,7 +1,7 @@
 require "erb"
 
 module Yocm
-  class Reporter
+  class HTMLReporter
     TEMPLATE_PATH = File.expand_path("../templates/execution_report.erb", __dir__)
 
     class << self

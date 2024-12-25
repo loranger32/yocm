@@ -3,7 +3,7 @@
 require "fileutils"
 require_relative "test_helpers"
 require_relative "../yocm/lib/engine" # for access to the ReportData struct
-require_relative "../yocm/lib/reporter_class"
+require_relative "../yocm/lib/html_reporter_class"
 require_relative "../yocm/lib/results_manager_class"
 
 
@@ -52,7 +52,7 @@ class ReportTest < Minitest::Test
     assert Dir.exist?(REPORTS_DIR)
     refute File.exist?(TEST_REPORT)
 
-    Yocm::Reporter.create_report(DEFAULT_DATA, REPORTS_DIR, FAKE_REPORT_DATE)
+    Yocm::HTMLReporter.create_report(DEFAULT_DATA, REPORTS_DIR, FAKE_REPORT_DATE)
 
     assert File.exist?(TEST_REPORT)
 
@@ -78,7 +78,7 @@ class ReportTest < Minitest::Test
   end
 
   def test_report_with_default_setting_and_active_user_present
-    Yocm::Reporter.create_report(DEFAULT_DATA, REPORTS_DIR, FAKE_REPORT_DATE)
+    Yocm::HTMLReporter.create_report(DEFAULT_DATA, REPORTS_DIR, FAKE_REPORT_DATE)
     report = File.read(TEST_REPORT)
 
     assert_includes report, "No specific user selected, reports generated for the active user: active_user@example.com (id: 1)"
@@ -89,7 +89,7 @@ class ReportTest < Minitest::Test
     data.no_user_option = true
     data.user = nil
 
-    Yocm::Reporter.create_report(data, REPORTS_DIR, FAKE_REPORT_DATE)
+    Yocm::HTMLReporter.create_report(data, REPORTS_DIR, FAKE_REPORT_DATE)
     report = File.read(TEST_REPORT)
 
     assert_includes report, "\"No user\" option provided - no user report generated"
@@ -100,7 +100,7 @@ class ReportTest < Minitest::Test
     data.no_user_option = false
     data.user = nil
 
-    Yocm::Reporter.create_report(data, REPORTS_DIR, FAKE_REPORT_DATE)
+    Yocm::HTMLReporter.create_report(data, REPORTS_DIR, FAKE_REPORT_DATE)
     report = File.read(TEST_REPORT)
 
     assert_includes report, "No specific user selected and no active user - no user report generated"
@@ -117,7 +117,7 @@ class ReportTest < Minitest::Test
     data.user.id = 2
     User.strict_param_setting = true
 
-    Yocm::Reporter.create_report(data, REPORTS_DIR, FAKE_REPORT_DATE)
+    Yocm::HTMLReporter.create_report(data, REPORTS_DIR, FAKE_REPORT_DATE)
     report = File.read(TEST_REPORT)
 
     assert_includes report, "Specific user selected - report generated for user: selected@example.com (id: 2)"

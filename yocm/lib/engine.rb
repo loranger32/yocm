@@ -268,9 +268,11 @@ module Yocm
         ### User's results
 
         if UserManager.user_selected?(user_info)
+          $log.info("Collecting user's results for #{user_info.user.email}...")
           results_manager = ResultsManager.new(user_info.user, date_object.date_instance)
           report_data.zip_code_results = results_manager.zip_code_results
           report_data.enterprise_results = results_manager.enterprise_results
+          $log.success("User's results collected")
         end
 
         ### ReportMaker
@@ -278,7 +280,7 @@ module Yocm
         report_data.end_time = Time.now
         report_data.elapsed_time = report_data.end_time - report_data.start_time
 
-        Reporter.create_report(report_data, PATH_TO[:reports], date_directory)
+        HTMLReporter.create_report(report_data, PATH_TO[:reports], date_directory)
 
         ########## EXITING PROGRAM #####################################################
 
