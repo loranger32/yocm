@@ -3,7 +3,7 @@
 require_relative "test_helpers"
 require_relative "../yocm/lib/date_retriever_class"
 
-# IMPORTANT : when in test mode, day of running the test is fixed to be 27-02-2022, a thursday
+# IMPORTANT : when in test mode, day of running the test is fixed to be 27-01-2022, a thursday
 
 DateRetriever = ::Yocm::DateRetriever
 
@@ -40,5 +40,10 @@ class DateRetrieverTest < Minitest::Test
   def test_raises_if_days_back_points_to_a_saturday_or_sunday
     assert_raises(Yocm::DateRetriever::Error) { DateRetriever.new(days_back: 4) }
     assert_raises(Yocm::DateRetriever::Error) { DateRetriever.new(days_back: 5) }
+  end
+
+  def test_date_instance_method_returns_a_date_instance
+    date_instance = Date.new(2022, 1, 27)
+    assert_equal date_instance, DateRetriever.new(days_back: 0).date_instance
   end
 end

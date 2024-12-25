@@ -18,6 +18,10 @@ module Yocm
       @target_date.strftime("%Y/%m/%d")
     end
 
+    def date_instance
+      Date.new(@target_date.year, @target_date.month, @target_date.day)
+    end
+
     def directory_name_format
       @target_date.strftime("%Y%m%d")
     end
