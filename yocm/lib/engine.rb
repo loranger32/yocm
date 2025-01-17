@@ -280,7 +280,7 @@ module Yocm
         end
 
         report_data.end_time = Time.now
-        report_data.elapsed_time = report_data.end_time - report_data.start_time
+        report_data.elapsed_time = elapsed_time(report_data.start_time, report_data.end_time)
 
 
         ### HTMLReportMaker
@@ -327,6 +327,13 @@ module Yocm
       end
     end
 
+    def elapsed_time(start, finish)
+      secs = finish - start
+      min, sec = secs.divmod(60)
+      minutes_str = min > 1 ? "minutes" : "minute"
+      seconds_str = sec > 1 ? "seconds" : "second"
+      "#{min} #{minutes_str} and #{sec.to_i} #{seconds_str}"
+    end
     def setup_directories!
       PATH_TO.values { |path| FileUtils.mkdir_p(path) }
     end

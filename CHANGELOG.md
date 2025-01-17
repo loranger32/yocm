@@ -1,6 +1,8 @@
 # MAIN
 
-# VERSION 0.14.0 - 17 january 2024
+- ENGINE - Reports - show execution time in minutes and seconds instead of an integer
+
+# VERSION 0.14.0 - 17 january 2025
 
 - ENGINE - Generate a report in the terminal with user's results if a user is provided (or an active user is set)
 

@@ -51,7 +51,7 @@ class HTMLReporterTest < HookedTestClass
       pngs_saved: "PNG successfully saved",
       db_storage: false,
       end_time: Time.new(2022, 1, 27, 0, 1, 30),
-      elapsed_time: 90.0,
+      elapsed_time: "1 minute and 30 seconds",
       zip_code_results: Yocm::ResultsManager::ZipCodeResults.new(match: false, matching: nil),
       enterprise_results: Yocm::ResultsManager::EnterpriseResults.new(match: false, matching: nil))
   end
@@ -82,7 +82,7 @@ class HTMLReporterTest < HookedTestClass
     assert_includes report, "5555"
     assert_includes report, "OCR Scans successfully saved"
     assert_includes report, "PNG successfully saved"
-    assert_includes report, "90.0"
+    assert_includes report, "1 minute and 30 seconds"
     assert_includes report, "2022-01-27 00:01:30 +0100"
   end
 
