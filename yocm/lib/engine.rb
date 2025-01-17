@@ -13,7 +13,7 @@ module Yocm
     PATH_TO[:app_public_folder] = File.expand_path(File.join("..", "..", "app", "public"), __dir__)
     PATH_TO.freeze
 
-    ReportData = Struct.new(:start_time, :engine_version, :options, :user, :no_user_option, :target_date, :url,
+    ReportData = Struct.new(:start_time, :engine_version, :options, :user, :no_user_option, :user_selected, :target_date, :url,
                             :total_known, :total_unknown, :zip_code_errors, :total_new, :total_files,
                             :publications_saved, :ocr_scans_saved, :pngs_saved, :db_storage, :end_time, :elapsed_time,
                             :zip_code_results, :enterprise_results)
@@ -38,12 +38,14 @@ module Yocm
       begin
         report_data = ReportData.new
 
-        user_info = UserManager.new(@options.user).user_info!
-        report_data.user = user_info.user
+        user_info                  = UserManager.new(@options.user).user_info!
+        report_data.user           = user_info.user
         report_data.no_user_option = user_info.no_user_option
+        report_data.user_selected  = user_info.user_selected
 
-        report_data.start_time = Time.now
+        report_data.start_time     = Time.now
         report_data.engine_version = VERSION
+
         report_data.options = @options.list
 
         ### Create publications based on index.xml + Parse zip code of publications for entities
@@ -267,20 +269,27 @@ module Yocm
 
         ### User's results
 
-        if UserManager.user_selected?(user_info)
+        if user_info.user_selected
           $log.info("Collecting user's results for #{user_info.user.email}...")
           results_manager = ResultsManager.new(user_info.user, date_object.date_instance)
           report_data.zip_code_results = results_manager.zip_code_results
           report_data.enterprise_results = results_manager.enterprise_results
           $log.success("User's results collected")
+        else
+          $log.warn("no user selected - no report generated")
         end
-
-        ### ReportMaker
 
         report_data.end_time = Time.now
         report_data.elapsed_time = report_data.end_time - report_data.start_time
 
+
+        ### HTMLReportMaker
+
         HTMLReporter.create_report(report_data, PATH_TO[:reports], date_directory)
+
+        ### TUIReportmaker
+
+        TUIReporter.new(report_data).display_report
 
         ########## EXITING PROGRAM #####################################################
 

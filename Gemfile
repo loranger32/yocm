@@ -17,6 +17,7 @@ gem "rtesseract", "~> 3.1", ">= 3.1.3"
 gem "rubyzip", "3.0.0.alpha", require: "zip"
 gem "sequel", "~> 5.84"
 gem "sqlite3", "~> 2.0", ">=2.0.4"
+gem "tty-markdown", "~> 0.7.2"
 
 group :engine do
   gem "benchmark", "~> 0.4.0"

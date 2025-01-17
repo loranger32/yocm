@@ -24,34 +24,38 @@ class UserManagerUserInfoTest < HookedTestClass
     end
   end
 
-  def test_user_info_return_correct_user_info_with_option_no_user_passed
+  def test_with_option_no_user_passed
     info = Yocm::UserManager.new(false).user_info!
     assert_nil info.user
-    assert_equal true, info.no_user_option
+    assert info.no_user_option
+    refute info.user_selected
   end
 
-  def test_user_info_return_correct_user_info_with_existing_user_required
+  def test_with_existing_user_required
     user = User[1]
     info = Yocm::UserManager.new(1).user_info!
 
     assert_equal user, info.user
+    assert info.user_selected
     refute info.no_user_option
   end
 
-  def test_user_info_return_correct_user_info_with_default_setting_and_active_user_present
-    active_user = User.where(active: true).first
+  def test_user_with_default_setting_and_active_user_present
+    active_user = User.active
     info = Yocm::UserManager.new(nil).user_info!
 
     assert_equal active_user, info.user
+    refute info.user_selected
     refute info.no_user_option
   end
 
-  def test_user_info_return_correct_info_with_default_setting_and_no_active_user
+  def test_user_info_with_default_setting_and_no_active_user
     DB.transaction(rollback: :always) do
       DB[:users].delete
         info = Yocm::UserManager.new(nil).user_info!
 
         assert_nil info.user
+        refute info.user_selected
         refute info.no_user_option
     end
 
@@ -60,14 +64,8 @@ class UserManagerUserInfoTest < HookedTestClass
       info = Yocm::UserManager.new(nil).user_info!
 
       assert_nil info.user
-      assert_equal false, info.no_user_option
+      refute info.user_selected
+      refute info.no_user_option
     end
-  end
-
-  def test_user_manager_predicate_user_selected_class_method
-    user = User[1]
-    user_info = Yocm::UserManager.new(1).user_info!
-
-    assert Yocm::UserManager.user_selected?(user_info)
   end
 end

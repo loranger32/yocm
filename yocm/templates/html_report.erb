@@ -88,10 +88,17 @@
       <h2>"No user" option provided - no user report generated</h2>
     <% elsif @data.user.nil? %>
       <h2>No specific user selected and no active user - no user report generated</h2>
-    <% elsif !@data.user.nil? && @data.user.active %>
-      <h2>No specific user selected, reports generated for the active user: <%= @data.user.email %> (id: <%= @data.user.id %>)</h2>
+    <% else %>
+      <% if @data.user_selected %>
+        <h2>Specific user selected - report generated for user: <%= @data.user.email %> (id: <%= @data.user.id %>)</h2>
+      <% else %>
+        <h2>No specific user selected, reports generated for the active user: <%= @data.user.email %> (id: <%= @data.user.id %>)</h2>
+      <% end %>
+
       <h3>Matching Zip Codes</h3>
-      <% if @data.zip_code_results.match %>
+      <% if Yocm::HTMLReporter.no_zip_codes_selected?(@data.user) %>
+        <p>No zip codes selected for user</p>
+      <% elsif @data.zip_code_results.match %>
         <table>
           <% @data.zip_code_results.matching.each do |zipcode| %>
             <tr>
@@ -105,7 +112,9 @@
       <% end %>
 
       <h3>Matching Enterprises</h3>
-      <% if @data.enterprise_results.match %>
+      <% if Yocm::HTMLReporter.no_enterprise_selected?(@data.user) %>
+        <p>No enterprise selected for user</p>
+      <% elsif @data.enterprise_results.match %>
         <table>
           <% @data.enterprise_results.matching.each do |enterprise| %>
             <tr>
@@ -117,10 +126,6 @@
       <% else %>
         <p>//////</p>
       <% end %>
-    <% elsif !@data.user.nil? && !@data.user.active %>
-      <h2>Specific user selected - report generated for user: <%= @data.user.email %> (id: <%= @data.user.id %>)</h2>
-    <% else %>
-      <h2>Could not figure out for which user a report must be generated</h2>
     <% end %>
   </body>
 </html>

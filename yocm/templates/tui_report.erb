@@ -1,0 +1,54 @@
+# Yocm - Report of <%= @data.target_date %>
+
+Generated at <%= Time.now %>
+
+## Program options:
+<% @data.options.each do |k, v| %>
+**<%= k %>**
+: - <%= v %>
+<% end %>
+
+| Program version                             | <%= @data.engine_version %>     |
+| Execution start time                        | <%= @data.start_time %>         |
+| Execution end time                          | <%= @data.end_time %>           |
+| Execution duration                          | <%= @data.elapsed_time %>       |
+| Download URL                                | <%= @data.url %>                |
+| Number of processed files                   | <%= @data.total_files %>        |
+| Number of known enterprises in the local DB | <%= @data.total_known %>        |
+| Number of unknown enterprises               | <%= @data.total_unknown %>      |
+| Number of incorporation's                   | <%= @data.total_new %>          |
+| Number of file with invalid zip code        | <%= @data.zip_code_errors%>     |
+| Publications PDF's saved                    | <%= @data.publications_saved %> |
+| OCR Scans saved                             | <%= @data.ocr_scans_saved %>    |
+| PNG files saved                             | <%= @data.pngs_saved%>          |
+| Publications saved in the DB                | <%= @data.db_storage %>         |
+
+<% if @data.no_user_option %>
+## "No user" option provided - no user report generated
+<% elsif @data.user.nil? %>
+## No specific user selected and no active user - no user report generated
+<% else %>
+  <% if @data.user_selected %>
+## Specific user selected - report generated for user: <%= @data.user.email %> (id: <%= @data.user.id %>)
+  <% else %>
+## No specific user selected, reports generated for the active user: <%= @data.user.email %> (id: <%= @data.user.id %>)
+  <% end %>
+
+### Matching Zip Codes
+  <% if Yocm::TUIReporter.no_zip_codes_selected?(@data.user) %>
+No zip codes selected for user
+  <% elsif @data.zip_code_results.match %>
+<%= Yocm::TUIReporter::tabulate_zip_code_results(@data.zip_code_results.matching) %>
+  <% else %>
+//////
+  <% end %>
+
+### Matching Enterprises
+  <% if Yocm::TUIReporter.no_enterprise_selected?(@data.user) %>
+No enterprise selected for user
+  <% elsif @data.enterprise_results.match %>
+<%= Yocm::TUIReporter::tabulate_enterprise_results(@data.enterprise_results.matching) %>
+  <% else %>
+//////
+  <% end %>
+<% end %>

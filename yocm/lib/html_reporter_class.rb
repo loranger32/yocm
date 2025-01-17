@@ -8,6 +8,14 @@ module Yocm
       def create_report(data, path, date)
         new(data, path, date).create_report
       end
+
+      def no_zip_codes_selected?(user)
+        user.follow_no_zips?
+      end
+
+      def no_enterprise_selected?(user)
+        user.follow_no_cbe_number?
+      end
     end
 
     def initialize(data, path, date)
@@ -17,7 +25,7 @@ module Yocm
     end
 
     def create_report
-      $log.info("Start creating report...")
+      $log.info("Start creating HTML report...")
 
       template = File.read(TEMPLATE_PATH)
 

@@ -2,13 +2,7 @@ module Yocm
   class UserManager
     class Error < StandardError; end
 
-    class << self
-      def user_selected?(user_info)
-        !user_info.user.nil?
-      end
-    end
-
-    UserInfo = Data.define(:user, :no_user_option)
+    UserInfo = Data.define(:user, :no_user_option, :user_selected)
 
     def initialize(user_id)
       validate_arg(user_id)
@@ -19,23 +13,23 @@ module Yocm
       # option --no-user has been passed
       if @user_id == false
         $log.success("No User mode selected - no user report will be generated")
-        return UserInfo.new(user: nil, no_user_option: true)
+        return UserInfo.new(user: nil, no_user_option: true, user_selected: false)
 
       # no option provided : default to active user and if none active, no user
       elsif @user_id.nil?
         active_user = User.active
         if active_user
           $log.success("No specific user selected, reports will be generated for the active user: #{active_user.email} (id: #{active_user.id})")
-          return UserInfo.new(user: active_user, no_user_option: false)
+          return UserInfo.new(user: active_user, no_user_option: false, user_selected: false)
         else
           $log.warn("No specific user selected, and no active user in DB. No user report will be generated")
-          return UserInfo.new(user: nil, no_user_option: false)
+          return UserInfo.new(user: nil, no_user_option: false, user_selected: false)
         end
       # option --user has been provided
       else
         user = find_user_or_raise!
         $log.success("Specific user required - report will be generated for #{user.email} (id: #{user.id})")
-        return UserInfo.new(user: user, no_user_option: false)
+        return UserInfo.new(user: user, no_user_option: false, user_selected: true)
       end
     end
 
