@@ -1,5 +1,7 @@
 # MAIN
 
+- ENGINE - Reports - show basic CPU info
+
 - ENGINE - Reports - show execution time in minutes and seconds instead of an integer
 
 # VERSION 0.14.0 - 17 january 2025

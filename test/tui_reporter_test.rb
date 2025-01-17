@@ -7,7 +7,7 @@ require_relative "../yocm/lib/results_manager_class"
 class TUIReporterTest < HookedTestClass
   # Must be kept in sync with the struct defined in engine.rb
   # ReportData = Struct.new(:start_time, :engine_version, :options, :user, :no_user_option, :user_selected, :target_date,
-  #    :url, :total_known, :total_unknown, :zip_code_errors, :total_new, :total_files,
+  #    :url, :total_known, :total_unknown, :zip_code_errors, :total_new, :total_files, :cpu_info,
   #   :publications_saved, :ocr_scans_saved, :pngs_saved, :db_storage, :end_time, :elapsed_time,
   #   :zip_code_results, :enterprise_results)
 
@@ -38,6 +38,7 @@ class TUIReporterTest < HookedTestClass
       db_storage: false,
       end_time: Time.new(2022, 1, 27, 0, 1, 30),
       elapsed_time: "1 minute and 30 seconds",
+      cpu_info: "2 CORES - a good CPU",
       zip_code_results: Yocm::ResultsManager::ZipCodeResults.new(match: false, matching: nil),
       enterprise_results: Yocm::ResultsManager::EnterpriseResults.new(match: false, matching: nil))
   end
@@ -68,6 +69,7 @@ class TUIReporterTest < HookedTestClass
     assert_includes tui_report, "PNG successfully saved"
     assert_includes tui_report, "1 minute and 30 seconds"
     assert_includes tui_report, "2022-01-27 00:01:30 +0100"
+    assert_includes tui_report, "2 CORES - a good CPU"
   end
 
   def test_tui_report_with_default_setting_and_active_user_present

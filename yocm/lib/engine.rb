@@ -14,7 +14,7 @@ module Yocm
     PATH_TO.freeze
 
     ReportData = Struct.new(:start_time, :engine_version, :options, :user, :no_user_option, :user_selected, :target_date, :url,
-                            :total_known, :total_unknown, :zip_code_errors, :total_new, :total_files,
+                            :total_known, :total_unknown, :zip_code_errors, :total_new, :total_files, :cpu_info,
                             :publications_saved, :ocr_scans_saved, :pngs_saved, :db_storage, :end_time, :elapsed_time,
                             :zip_code_results, :enterprise_results)
 
@@ -36,7 +36,7 @@ module Yocm
 
     def run
       begin
-        report_data = ReportData.new
+        report_data                = ReportData.new
 
         user_info                  = UserManager.new(@options.user).user_info!
         report_data.user           = user_info.user
@@ -45,8 +45,8 @@ module Yocm
 
         report_data.start_time     = Time.now
         report_data.engine_version = VERSION
-
-        report_data.options = @options.list
+        report_data.cpu_info       = gather_basic_cpu_info
+        report_data.options        = @options.list
 
         ### Create publications based on index.xml + Parse zip code of publications for entities
         ### that are not in the local database
@@ -334,6 +334,13 @@ module Yocm
       seconds_str = sec > 1 ? "seconds" : "second"
       "#{min} #{minutes_str} and #{sec.to_i} #{seconds_str}"
     end
+
+    def gather_basic_cpu_info
+      raw = `cat /proc/cpuinfo | grep "model name"`
+      splitted = raw.delete_prefix("model name\t: ").split("model name\t: ")
+      "#{splitted.size} CORES - #{splitted.first}"
+    end
+
     def setup_directories!
       PATH_TO.values { |path| FileUtils.mkdir_p(path) }
     end
