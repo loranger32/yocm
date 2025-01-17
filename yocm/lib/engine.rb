@@ -269,14 +269,14 @@ module Yocm
 
         ### User's results
 
-        if user_info.user_selected
+        if user_info.user
           $log.info("Collecting user's results for #{user_info.user.email}...")
           results_manager = ResultsManager.new(user_info.user, date_object.date_instance)
           report_data.zip_code_results = results_manager.zip_code_results
           report_data.enterprise_results = results_manager.enterprise_results
           $log.success("User's results collected")
         else
-          $log.warn("no user selected - no report generated")
+          $log.warn("no user selected and no active user - no report generated")
         end
 
         report_data.end_time = Time.now
