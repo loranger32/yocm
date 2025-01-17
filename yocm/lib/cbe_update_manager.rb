@@ -7,7 +7,7 @@ module Yocm
 
     def cli_check_status
       puts "**************************"
-      puts "*  DCAP UPDATE MANAGER   *"
+      puts "*  YOCM UPDATE MANAGER   *"
       puts "**************************"
       puts
       puts "Checking datasets versions"
