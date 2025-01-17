@@ -132,7 +132,7 @@ module Yocm
     end
 
     def publications_matching_zip_code(publications, zip_code)
-      publications.select { |pub| pub.zip_code_id == zip_code.id }
+      publications.select { |pub| pub.zip_code_id == zip_code.id }.sort_by { it.probably_new == "true" }.reverse
     end
 
     def ratio_complete_all(complete, all)

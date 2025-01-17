@@ -1,5 +1,7 @@
 # MAIN
 
+- GUI - On results page based on zip code, show the new entities first
+
 - ENGINE - Reports - show basic CPU info
 
 - ENGINE - Reports - show execution time in minutes and seconds instead of an integer
