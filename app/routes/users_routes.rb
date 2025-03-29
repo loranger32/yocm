@@ -282,14 +282,23 @@ module Yocm
           enterprises_ids = @user.enterprises_dataset.order(:id).select_map(:id)
 
           r.is do
+            current_page = tp.pos_int("page", 1)
+            
+            @pub_dates_ds = Publication.select(:pub_date)
+              .distinct
+              .order_by(:pub_date)
+              .reverse
+              .extension(:pagination)
+              .paginate(current_page, 15)
+
             @results_data = []
-            @pub_dates = Publication.select(:pub_date).distinct.order_by(:pub_date).reverse.select_map(:pub_date)
-            @pub_dates.each do |pub_date|
+            @pub_dates_ds.each do |row|
+              pub_date = row[:pub_date]
               matching_zip_codes_count = Publication.daily_publications_matching_zip_codes_count_for(zip_code_ids, pub_date)
               matching_enterprises_count = Publication.daily_publications_matching_enterprises_count_for(enterprises_ids, pub_date)
               @results_data << {pub_date: pub_date,
-                                matching_zip_code_count: matching_zip_codes_count,
-                                matching_enterprises_count: matching_enterprises_count}
+                              matching_zip_code_count: matching_zip_codes_count,
+                              matching_enterprises_count: matching_enterprises_count}
             end
             view "results/index"
           end
