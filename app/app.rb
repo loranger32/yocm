@@ -47,9 +47,10 @@ class App < Roda
   plugin :partials
   plugin :content_for
   plugin :assets,
-    css: %w[fonts.css bootstrap_5_3_2.min.css style.css],
+    css: %w[fonts.css bootstrap_5_3_2.min.css bootstrap-icons.css style.css],
     js: {bootstrap: "bootstrap_5_3_2.bundle.min.js", main: "main.js", user: "user.js",
-         bs_tooltips: "bs_tooltips.js", htmx: "htmx-1-9-10.min.js", delete_pubs: "delete_pubs.js"},
+         bs_tooltips: "bs_tooltips.js", htmx: "htmx-1-9-10.min.js", delete_pubs: "delete_pubs.js",
+         back_to_top: "back_to_top.js"},
     group_subdirs: false,
     timestamp_paths: true
   compile_assets if production?
