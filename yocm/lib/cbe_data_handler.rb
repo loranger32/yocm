@@ -26,7 +26,9 @@ module Yocm
                              new: "establishment_insert.csv"}}.freeze
 
     def delete_cbe_data
-      CBE_TABLES.each { DB[_1].delete }
+      DB.transaction do
+        CBE_TABLES.each { DB[_1].delete }
+      end
       puts "CBE tables have been cleaned " \
         "(#{CBE_TABLES.join(", ")}).Publications and zip codes unaffected."
     end

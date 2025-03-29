@@ -44,11 +44,11 @@ class Publication < Sequel::Model
       distinct.select_order_map(:pub_date).reverse
     end
 
-    def matching_zip_codes_count_for_day_and_codes(zip_code_ids, pub_date)
-      where(zip_code_id: zip_code_ids)
-        .where(pub_date: pub_date)
+    def zip_code_counts_for_date(zip_code_ids, pub_date)
+      where(zip_code_id: zip_code_ids, pub_date: pub_date)
         .group_and_count(:zip_code_id)
-        .map{[ZipCode[_1[:zip_code_id]], _1[:count]]}
+        .select_hash(:zip_code_id, :count)
+        .transform_keys { |id| ZipCode[id] }
     end
 
     def daily_publications_matching_enterprises_count_for(enterprises_ids, pub_date)

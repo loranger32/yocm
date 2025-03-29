@@ -100,7 +100,7 @@ module Yocm
     end
 
     def valid_pub_date?(pub_date)
-      pub_date.match?(/\A\d{4}-\d{2}-\d{2}\z/i) && !Publication.where(pub_date: pub_date).empty?
+      pub_date.match?(/\A\d{4}-\d{2}-\d{2}\z/i) && Publication.where(pub_date: pub_date).any?
     end
 
     def valid_zip_code?(zip_code)

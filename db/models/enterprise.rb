@@ -91,10 +91,8 @@ class Enterprise < Sequel::Model
 
     query = DB[:juridical_forms].where(code: juridical_form_id)
 
-    case language
-    when "FR" then query.where(language: "FR").first[:name]
-    when "NL" then query.where(language: "NL").first[:name]
-    when "DE" then query.where(language: "DE").first[:name]
+    if %w[FR NL DE].include?(language)
+      query.where(language: language).first[:name]
     else
       query.where(language: "FR").first[:name]
     end
