@@ -5,11 +5,15 @@ class Enterprise < Sequel::Model
   one_to_one :branch
 
   def address
-    company? ? Address[id] : Address[establishments.first.id]
+    @address ||= if company?
+      Address[id]
+    else
+      Address[establishments.first.id]
+    end
   end
 
   def belgian_address
-    if foreign_entity?
+    @belgian_address ||= if foreign_entity?
       if has_establishment?
         Address.where(id: establishments.map(&:id), country_fr: nil).first # Belgian addresses have a null value for the country_fr table
       elsif has_branch?
