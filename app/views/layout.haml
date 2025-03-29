@@ -10,6 +10,7 @@
     %meta{ name: 'copyright', content: 'Laurent Guinotte' }
     %link{ rel: 'shortcut icon', href: '/images/layer.png', type: 'image/x-icon' }
     %link{ rel: 'icon', href: '/images/layer.png', type: 'image/x-icon' }
+    %link{ rel: 'stylesheet', href: '/css/bootstrap-icons.css' }
 
     != assets(:css)
 
@@ -42,7 +43,27 @@
         %a{ href: 'https://www.flaticon.com/', title: 'Flaticon'} www.flaticon.com
       
 
+    %button#backToTop{title: "Back to top"}
+      %i.bi.bi-arrow-up
+
     != assets([:js, :bootstrap])
     != assets([:js, :main])
     != assets([:js, :htmx])
     != content_for(:js)
+    :javascript
+      const backToTopButton = document.getElementById("backToTop");
+      
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 300) {
+          backToTopButton.style.display = "block";
+        } else {
+          backToTopButton.style.display = "none";
+        }
+      });
+      
+      backToTopButton.addEventListener("click", () => {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      });
