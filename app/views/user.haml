@@ -88,7 +88,7 @@
             %th{scope: "col"} Zipcode
             %td{scope: "col"} Action
         %tbody
-          - @user.enterprises.each do |enterprise|
+          - @followed_enterprises.each do |enterprise|
             %tr.text-center
               %td= enterprise.id
               %td.fw-bold
@@ -98,7 +98,7 @@
                 %form{action: "/users/#{@user.id}/delete_cbe", method: :post}
                   %input{type: :hidden, name: 'cbe_number', value: enterprise.id}
                   %input.btn.btn-danger#delete_enterprise_button{type: :submit, value: "Delete"}
-          - @user.publications.each do |publication|
+          - @followed_publications.each do |publication|
             %tr.text-center.table-info
               %td= publication.cbe_number
               %td.fw-bold

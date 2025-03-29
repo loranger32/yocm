@@ -45,6 +45,8 @@ module Yocm
         ### User Management
         r.is do
           r.get do
+            @followed_enterprises = @user.enterprises_dataset.eager(:denominations).all
+            @followed_publications = @user.publications
             view "user"
           end
 
