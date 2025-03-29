@@ -36,14 +36,25 @@ module Yocm
         r.post "many" do
 
           all_pub_dirs = Dir[File.join(opts[:root], "public", "*")].reject { _1.end_with?("images") }
+          # directory name ends with 8 digits (date)
+          target_pub_dirs = all_pub_dirs.select { _1[-8..-1] <= @target_date.delete("-") }
 
-          target_dirs = all_pub_dirs.select { _1[-8..-1] <= @target_date.delete("-") }
+          # file name format is report_YYYYMMDD.html
+          all_report_files = Dir[File.join("yocm", "data", "reports", "report_*.html")]
+          target_report_files = all_report_files.select { _1[-13..-6] <= @target_date.delete("-") }
+
+          # file name format is YYYYMMDD.xml
+          all_index_files = Dir[File.join("yocm", "data", "index", "*.xml")]
+          target_index_files = all_index_files.select { _1[-12..-5] <= @target_date.delete("-") }
 
           if (num_delete = Publication.where(Sequel[:pub_date] <= @target_date).delete) > 0
-            FileUtils.rm_r(target_dirs, secure: true)
+            FileUtils.rm_r(target_pub_dirs, secure: true)
+            target_report_files.each { File.delete(it) }
+            target_index_files.each { File.delete(it) }
+
             flash["success"] = "#{num_delete} publications deleted from #{@target_date}"
           else
-            flash["error"] = "No publication deleted - check the date param"
+            flash["error"] = "No publication deleted - check the date parameter"
           end
 
           r.redirect "/publications"
@@ -53,6 +64,14 @@ module Yocm
         r.post do
           if (num_delete = Publication.where(pub_date: @target_date).delete) > 0
             FileUtils.rm_r(File.join(opts[:root], "public", @target_date.delete("-")), secure: true)
+
+            # Delete corresponding report and index files
+            report_file = File.join("yocm", "data", "reports", "report_#{@target_date.delete("-")}.html")
+            index_file = File.join("yocm", "data", "index", "#{@target_date.delete("-")}.xml")
+
+            File.delete(report_file) if File.exist?(report_file)
+            File.delete(index_file) if File.exist?(index_file)
+
             flash["success"] = "#{num_delete} publications from #{@target_date} deleted"
           else
             flash["error"] = "No publication deleted - check the date param"
