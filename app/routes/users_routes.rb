@@ -278,8 +278,8 @@ module Yocm
 
         ### User's results
         r.on "results" do
-          zip_code_ids = @user.zip_codes.sort_by(&:code).map(&:id)
-          enterprises_ids = @user.enterprises.sort_by(&:id).map(&:id)
+          zip_code_ids = @user.zip_codes_dataset.order(:code).select_map(:id)
+          enterprises_ids = @user.enterprises_dataset.order(:id).select_map(:id)
 
           r.is do
             @results_data = []
