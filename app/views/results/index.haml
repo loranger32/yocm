@@ -1,5 +1,18 @@
 - @page_title = "Daily Results"
 
+.d-flex.justify-content-center.mb-3
+  %nav.text-center{"aria-label" => "Results pagination"}
+    %ul.pagination
+      %li.page-item{class: @pub_dates_ds.first_page? ? "disabled" : ""}
+        %a.page-link{href: "/users/#{@user.id}/results?page=#{@pub_dates_ds.prev_page}"}
+          %span{"aria-hidden" => true} &laquo;
+      - @pub_dates_ds.page_range.each do |page_number|
+        %li.page-item{class: page_number == @pub_dates_ds.current_page ? "active" : ""}
+          %a.page-link{href: "/users/#{@user.id}/results?page=#{page_number}"}= page_number
+      %li.page-item{class: @pub_dates_ds.last_page? ? "disabled" : ""}
+        %a.page-link{href: "/users/#{@user.id}/results?page=#{@pub_dates_ds.next_page}"}
+          %span{"aria-hidden" => true} &raquo;
+
 .col-6.offset-3.mb-5
   %table.table
     %thead.text-center
