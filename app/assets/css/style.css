@@ -19,6 +19,10 @@ a {
   background-color: #a0d8e1;
 }
 
+.new_entity {
+  background-color: #f2e6ea;
+}
+
 #backToTop {
   position: fixed;
   bottom: 25px;

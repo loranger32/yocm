@@ -1,6 +1,6 @@
 .row.mb-3
-  .col-4.offset-1.card{class: @active_user&.follow_cbe_number?(publication.cbe_number) ? "followed" : ""}
-    - if (enterprise = Enterprise[publication.cbe_number])
+  - if (enterprise = Enterprise[publication.cbe_number])
+    .col-4.offset-1.card{class: @active_user&.follow_cbe_number?(publication.cbe_number) ? "followed" : ""}
       %h5.card-title
         = enterprise.name
         %span.fst-italic.fs-6.fw-normal (#{enterprise.juridical_form})
@@ -39,7 +39,8 @@
               %span, box #{enterprise.box}
           %p= enterprise.zip_and_city
           %p= enterprise.country_fr_and_nl
-    - else
+  - else
+    .col-4.offset-1.card{class: publication.probably_new ? "new_entity" : ""}
       %h5.card-title
         = publication.entity_name
         %br
@@ -51,10 +52,10 @@
         - else
           %em No address info available
 
-    %a.btn.btn-primary.mb-3{href: link_cbe(publication.cbe_number), target: :blank} Link to CrossRoadBank
-    %a.btn.btn-primary.mb-3{href: link_mb(publication.cbe_number), target: :blank} Link to MB
-    %a.btn.btn-primary.mb-3{href: link_public_accounts(publication.cbe_number), target: :blank} Public accounts
-    %a.btn.btn-primary.mb-3{href: link_publication(publication), target: :blank} View full publication
+      %a.btn.btn-primary.mb-3{href: link_cbe(publication.cbe_number), target: :blank} Link to CrossRoadBank
+      %a.btn.btn-primary.mb-3{href: link_mb(publication.cbe_number), target: :blank} Link to MB
+      %a.btn.btn-primary.mb-3{href: link_public_accounts(publication.cbe_number), target: :blank} Public accounts
+      %a.btn.btn-primary.mb-3{href: link_publication(publication), target: :blank} View full publication
   
   .col-7
     %iframe{type: 'application/pdf', src: link_publication(publication), loading: "lazy", width: "100%", height: "400px"}

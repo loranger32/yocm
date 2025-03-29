@@ -46,8 +46,28 @@
         %a{ href: 'https://www.flaticon.com/', title: 'Flaticon'} www.flaticon.com
       
 
+    %button#backToTop{title: "Back to top"}
+      %i.bi.bi-arrow-up
+
     != assets([:js, :bootstrap])
     != assets([:js, :main])
     != assets([:js, :htmx])
     != assets([:js, :back_to_top])
     != content_for(:js)
+    :javascript
+      const backToTopButton = document.getElementById("backToTop");
+      
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 300) {
+          backToTopButton.style.display = "block";
+        } else {
+          backToTopButton.style.display = "none";
+        }
+      });
+      
+      backToTopButton.addEventListener("click", () => {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      });
