@@ -1,5 +1,7 @@
 # MAIN
 
+# VERSION 0.15.0 - 4 April 2025
+
 - GEMFILE - Add specific dependency on Webrick > 1.18.1 to fix a possible request smuggling issue ([CVE-2024-47220](https://www.cve.org/CVERecord?id=CVE-2024-47220))
 
 - GEMFILE - Bump nokogiri to 1.18.6 to fix [CVE 2025-24855](https://www.cve.org/CVERecord?id=CVE-2025-24855) and [CVE 2024-55549](https://www.cve.org/CVERecord?id=CVE-2024-55549)
